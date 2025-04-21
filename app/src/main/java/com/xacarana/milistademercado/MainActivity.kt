@@ -11,7 +11,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.xacarana.milistademercado.ui.theme.MiListaDeMercadoTheme
+import com.xacarana.milistademercado.screens.Login
+import com.xacarana.milistademercado.screens.Register
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,14 +24,26 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MiListaDeMercadoTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                /*Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
-                }
+
+                }*/
+                AppNavigator()
             }
         }
+    }
+}
+
+@Composable
+fun AppNavigator() {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = "register") {
+        composable("register") { Register(navController) }
+        composable("login") { Login(navController) }
     }
 }
 
