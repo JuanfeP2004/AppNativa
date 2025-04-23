@@ -1,5 +1,7 @@
 package com.xacarana.milistademercado.screens
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -17,7 +19,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
+import com.xacarana.milistademercado.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +52,11 @@ fun CreateProduct(navController: NavController){
         LazyVerticalGrid(
             columns = GridCells.Fixed(4)
         ) {
-
+            item { ProductImageWidget() }
+            item { ProductImageWidget() }
+            item { ProductImageWidget() }
+            item { ProductImageWidget() }
+            item { ProductImageWidget() }
         }
     }
 }
@@ -91,5 +99,16 @@ fun Selector(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun ProductImageWidget(){
+    Box(){
+        Image(
+            painter = painterResource(id = R.drawable.tomate),
+            contentDescription = "Hola"
+        )
+        Text("Tomate")
     }
 }
