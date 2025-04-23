@@ -14,9 +14,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.xacarana.milistademercado.screens.CreateList
+import com.xacarana.milistademercado.screens.CreateProduct
 import com.xacarana.milistademercado.ui.theme.MiListaDeMercadoTheme
 import com.xacarana.milistademercado.screens.Login
+import com.xacarana.milistademercado.screens.Menu
 import com.xacarana.milistademercado.screens.Register
+import com.xacarana.milistademercado.screens.ViewList
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +48,10 @@ fun AppNavigator() {
     NavHost(navController = navController, startDestination = "register") {
         composable("register") { Register(navController) }
         composable("login") { Login(navController) }
+        composable("menu") { Menu(navController) }
+        composable("create-list") { CreateList(navController) }
+        composable("create-product") { CreateProduct(navController) }
+        composable("view-list") { ViewList(navController) }
     }
 }
 

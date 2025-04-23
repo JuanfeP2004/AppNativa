@@ -31,7 +31,7 @@ fun Login(navController: NavController){
             Text("INGRESA TU CONTRASEÑA")
             TextField(value = "Contraseña", onValueChange = {})
 
-            Button(onClick = {navController.navigate("register")}) {
+            Button(onClick = {navController.navigate("menu")}) {
                 Text("Ingresar")
             }
             Button(onClick = {navController.navigate("register")}) {
