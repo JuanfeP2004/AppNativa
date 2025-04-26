@@ -1,9 +1,11 @@
 package com.xacarana.milistademercado
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -14,6 +16,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.xacarana.milistademercado.models.MarketList
+import com.xacarana.milistademercado.models.User
 import com.xacarana.milistademercado.screens.CreateList
 import com.xacarana.milistademercado.screens.CreateProduct
 import com.xacarana.milistademercado.ui.theme.MiListaDeMercadoTheme
@@ -21,8 +25,12 @@ import com.xacarana.milistademercado.screens.Login
 import com.xacarana.milistademercado.screens.Menu
 import com.xacarana.milistademercado.screens.Register
 import com.xacarana.milistademercado.screens.ViewList
+import java.util.Date
+
+val usuario = User(name = "Elliot", emptyList())
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -41,17 +49,18 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavigator() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "register") {
         composable("register") { Register(navController) }
-        composable("login") { Login(navController) }
-        composable("menu") { Menu(navController) }
-        composable("create-list") { CreateList(navController) }
-        composable("create-product") { CreateProduct(navController) }
-        composable("view-list") { ViewList(navController) }
+        composable("login") { Login(navController, usuario) }
+        composable("menu") { Menu(navController, usuario) }
+        composable("create-list") { CreateList(navController, usuario) }
+        composable("create-product") { CreateProduct(navController, usuario) }
+        composable("view-list") { ViewList(navController, usuario) }
     }
 }
 

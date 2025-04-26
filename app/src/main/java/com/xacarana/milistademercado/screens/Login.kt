@@ -11,9 +11,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.xacarana.milistademercado.R
+import com.xacarana.milistademercado.models.User
 
 @Composable
-fun Login(navController: NavController){
+fun Login(navController: NavController, user: User){
     Surface() {
         Column {
             Image(

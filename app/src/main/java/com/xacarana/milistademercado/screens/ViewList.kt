@@ -18,9 +18,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.xacarana.milistademercado.R
+import com.xacarana.milistademercado.models.User
 
 @Composable
-fun ViewList(navController: NavController){
+fun ViewList(navController: NavController, user: User){
     Surface {
         Column {
             Row {

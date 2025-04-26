@@ -11,13 +11,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import com.xacarana.milistademercado.models.User
 
 
 @Composable
-fun Menu(navController: NavController){
+fun Menu(navController: NavController, user: User){
     Surface {
         Column {
-            Text("BIENVENIDO USER")
+            Text("BIENVENIDO ${user.name.value}")
             Text("Que quieres comprar hoy?")
 
             Button(onClick = { navController.navigate("create-list") }) {
