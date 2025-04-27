@@ -26,7 +26,7 @@ fun Login(navController: NavController, user: User){
 
             Text("INICIAR SESION")
 
-            Text("INGRESA TU NOMBRE")
+            Text("INGRESA TU EMAIL")
             TextField(value = "Usuario", onValueChange = {})
 
             Text("INGRESA TU CONTRASEÑA")

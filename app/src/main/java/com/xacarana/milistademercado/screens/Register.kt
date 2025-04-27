@@ -8,14 +8,25 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.xacarana.milistademercado.R
+import com.xacarana.milistademercado.functions.Authenticator
 import com.xacarana.milistademercado.models.User
 
 @Composable
-fun Register(navController: NavController){
+fun Register(navController: NavController, authenticator: Authenticator){
+
+    var name by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var messageError by remember { mutableStateOf("") }
+
     Surface() {
         Column {
             Image(
@@ -28,12 +39,24 @@ fun Register(navController: NavController){
             Text("BIENVENIDO")
 
             Text("INGRESA TU NOMBRE")
-            TextField(value = "Usuario", onValueChange = {})
+            TextField(value = name, onValueChange = { name = it })
+
+            Text("INGRESA TU EMAIL")
+            TextField(value = email, onValueChange = { email = it })
 
             Text("INGRESA TU CONTRASEÑA")
-            TextField(value = "Contraseña", onValueChange = {})
+            TextField(value = password, onValueChange = { password = it })
 
-            Button(onClick = {navController.navigate("login")}) {
+            Text(messageError)
+
+            Button(onClick = {
+                val register = authenticator.registrar(
+                    name,
+                    email,
+                    password,
+                    { navController.navigate("login") },
+                    { messageError = it })
+            }) {
                 Text("Registrarse")
             }
             Button(onClick = {navController.navigate("login")}) {

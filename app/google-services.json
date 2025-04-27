@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1058860295767",
+    "project_id": "app-nativa-5e119",
+    "storage_bucket": "app-nativa-5e119.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1058860295767:android:62afa1fd69958b2b716512",
+        "android_client_info": {
+          "package_name": "com.xacarana.milistademercado"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJeBn-4ibdSvgaPPNcU29_Z6xIbMDVmkU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

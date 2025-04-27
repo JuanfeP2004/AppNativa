@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.xacarana.milistademercado.functions.Authenticator
 import com.xacarana.milistademercado.models.MarketList
 import com.xacarana.milistademercado.models.User
 import com.xacarana.milistademercado.screens.CreateList
@@ -28,6 +29,7 @@ import com.xacarana.milistademercado.screens.ViewList
 import java.util.Date
 
 val usuario = User(name = "Elliot", emptyList())
+val authenticator = Authenticator()
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -55,7 +57,7 @@ fun AppNavigator() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "register") {
-        composable("register") { Register(navController) }
+        composable("register") { Register(navController, authenticator) }
         composable("login") { Login(navController, usuario) }
         composable("menu") { Menu(navController, usuario) }
         composable("create-list") { CreateList(navController, usuario) }
