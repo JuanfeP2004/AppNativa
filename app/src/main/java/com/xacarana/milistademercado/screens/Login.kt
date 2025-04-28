@@ -53,6 +53,7 @@ fun Login(navController: NavController, user: User, authenticator: Auth) {
             Text(messageError)
 
             Button(onClick = {
+                messageError = ""
                 coroutineScope.launch {
                     authenticator.iniciarSesion(
                         email,

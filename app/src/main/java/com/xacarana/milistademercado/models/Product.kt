@@ -2,14 +2,14 @@ package com.xacarana.milistademercado.models
 
 class Product(
     name: String,
-    amount: Int,
+    amount: Float,
     und: String,
     idPhoto: Int,
     check: Boolean
 ) {
-    val name: String = name
-    val amount: Int = amount
-    val und: String = und
-    val idProduct: Int = idPhoto
-    val check: Boolean = check
+    var name: String = name
+    var amount: Float = amount
+    var und: String = und
+    var idProduct: Int = idPhoto
+    var check: Boolean = check
 }

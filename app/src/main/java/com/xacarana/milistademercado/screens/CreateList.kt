@@ -43,6 +43,8 @@ import java.time.LocalDate
 fun CreateList(navController: NavController, user: User){
 
     var fecha by remember { mutableStateOf<LocalDate?>(null) }
+    var name by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
 
     Column {
 

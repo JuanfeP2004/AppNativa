@@ -1,9 +1,11 @@
 package com.xacarana.milistademercado.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Button
@@ -14,15 +16,18 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.xacarana.milistademercado.R
 import com.xacarana.milistademercado.models.User
+import com.xacarana.milistademercado.models.Product
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,6 +35,18 @@ fun CreateProduct(navController: NavController, user: User){
 
     val opciones = listOf("und", "kg", "lbs", "lts", "cm")
     var seleccion by remember { mutableStateOf("und") }
+
+    var product = Product(
+        name = "Tomate",
+        amount = 1f,
+        und = "und",
+        idPhoto = R.drawable.tomate,
+        check = false
+    )
+
+    var name = remember { mutableStateOf(product.name) }
+    var amount by remember { mutableFloatStateOf(product.amount) }
+    var units by remember { mutableStateOf(product.und) }
 
     Column {
 
@@ -42,22 +59,43 @@ fun CreateProduct(navController: NavController, user: User){
             }
         }
 
-        Text("Nombre del objeto")
+        Text(name.value)
 
         Row {
             Text("Unidades:")
-            TextField(value = "", onValueChange = {})
-            Selector(opciones = opciones, opcionSeleccionada =  seleccion, onOpcionSeleccionada = {seleccion = it})
+            TextField(
+                modifier = Modifier.fillMaxWidth(0.5f),
+                value = amount.toString(),
+                onValueChange = {
+                    val newAmount = it.toFloatOrNull() // Convierte el texto a Float, o devuelve null si no es válido
+                    if (newAmount != null) {
+                        amount = newAmount // Solo actualizamos si es un valor válido
+                        product.amount = newAmount
+                    }
+                },
+                )
+            TextField(
+                modifier = Modifier.fillMaxWidth(0.2f),
+                value = seleccion,
+                readOnly = true,
+                onValueChange = {seleccion = it}
+            )
+            Selector(
+                opciones = opciones,
+                opcionSeleccionada =  seleccion,
+                onOpcionSeleccionada = {seleccion = it},
+                product = product
+                )
         }
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(4)
         ) {
-            item { ProductImageWidget() }
-            item { ProductImageWidget() }
-            item { ProductImageWidget() }
-            item { ProductImageWidget() }
-            item { ProductImageWidget() }
+            item { ProductImageWidget("Tomate", R.drawable.tomate, product, name) }
+            item { ProductImageWidget("Pollo", R.drawable.pollo, product, name) }
+            item { ProductImageWidget("Carne", R.drawable.carne, product, name) }
+            item { ProductImageWidget("Platano", R.drawable.platano, product, name) }
+            item { ProductImageWidget("Pescado", R.drawable.pescado, product, name) }
         }
     }
 }
@@ -67,7 +105,8 @@ fun CreateProduct(navController: NavController, user: User){
 fun Selector(
     opciones: List<String>,
     opcionSeleccionada: String,
-    onOpcionSeleccionada: (String) -> Unit
+    onOpcionSeleccionada: (String) -> Unit,
+    product: Product
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -77,7 +116,7 @@ fun Selector(
     ) {
         TextField(
             value = opcionSeleccionada,
-            onValueChange = {},
+            onValueChange = { },
             readOnly = true,
             label = { Text("Selecciona una opción") },
             trailingIcon = {
@@ -95,6 +134,7 @@ fun Selector(
                     text = { Text(opcion) },
                     onClick = {
                         onOpcionSeleccionada(opcion)
+                        product.und = opcion
                         expanded = false
                     }
                 )
@@ -104,12 +144,18 @@ fun Selector(
 }
 
 @Composable
-fun ProductImageWidget(){
-    Box(){
+fun ProductImageWidget(name: String, imageId : Int, product: Product, nameState: MutableState<String>){
+    Box(
+        modifier = Modifier.clickable(onClick = {
+            product.idProduct = imageId
+            product.name = name
+            nameState.value = name
+        })
+    ){
         Image(
-            painter = painterResource(id = R.drawable.tomate),
-            contentDescription = "Hola"
+            painter = painterResource(id = imageId),
+            contentDescription = name
         )
-        Text("Tomate")
+        Text(name)
     }
 }

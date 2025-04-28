@@ -50,6 +50,7 @@ fun Register(navController: NavController, authenticator: Auth){
             Text(messageError)
 
             Button(onClick = {
+                messageError = ""
                 val register = authenticator.registrar(
                     name,
                     email,
