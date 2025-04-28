@@ -5,12 +5,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import com.xacarana.milistademercado.authenticator
 import com.xacarana.milistademercado.models.User
 
 
@@ -18,6 +22,15 @@ import com.xacarana.milistademercado.models.User
 fun Menu(navController: NavController, user: User){
     Surface {
         Column {
+            Icon(
+                imageVector = Icons.Default.Settings,
+                contentDescription = "configuracion",
+                modifier = Modifier.clickable(onClick = {
+                    //Codigo temporal, no final
+                    authenticator.cerrarSesion(
+                        user)
+                        {navController.navigate("login")}
+                }))
             Text("BIENVENIDO ${user.name.value}")
             Text("Que quieres comprar hoy?")
 

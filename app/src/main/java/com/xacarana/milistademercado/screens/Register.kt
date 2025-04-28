@@ -16,11 +16,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.xacarana.milistademercado.R
-import com.xacarana.milistademercado.functions.Authenticator
+import com.xacarana.milistademercado.functions.Auth
 import com.xacarana.milistademercado.models.User
 
 @Composable
-fun Register(navController: NavController, authenticator: Authenticator){
+fun Register(navController: NavController, authenticator: Auth){
 
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
