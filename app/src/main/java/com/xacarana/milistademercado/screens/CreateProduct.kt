@@ -31,18 +31,19 @@ import com.xacarana.milistademercado.models.Product
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateProduct(navController: NavController, user: User){
+fun CreateProduct(navController: NavController, user: User, list: MutableList<Product>){
 
     val opciones = listOf("und", "kg", "lbs", "lts", "cm")
     var seleccion by remember { mutableStateOf("und") }
 
-    var product = Product(
+    var product by remember {  mutableStateOf(Product(
         name = "Tomate",
         amount = 1f,
         und = "und",
         idPhoto = R.drawable.tomate,
-        check = false
+        check = false)
     )
+    }
 
     var name = remember { mutableStateOf(product.name) }
     var amount by remember { mutableFloatStateOf(product.amount) }
@@ -54,7 +55,10 @@ fun CreateProduct(navController: NavController, user: User){
             Button(onClick = { navController.navigate("create-list") }) {
                 Text("REGRESAR")
             }
-            Button(onClick = { navController.navigate("create-list") }) {
+            Button(onClick = {
+                list.add(product)
+                navController.navigate("create-list")
+            }) {
                 Text("CREAR")
             }
         }
@@ -83,7 +87,10 @@ fun CreateProduct(navController: NavController, user: User){
             Selector(
                 opciones = opciones,
                 opcionSeleccionada =  seleccion,
-                onOpcionSeleccionada = {seleccion = it},
+                onOpcionSeleccionada = {
+                    product.und = seleccion
+                    seleccion = it
+                                       },
                 product = product
                 )
         }

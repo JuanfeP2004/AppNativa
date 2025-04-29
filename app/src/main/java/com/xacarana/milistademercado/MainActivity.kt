@@ -20,6 +20,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.xacarana.milistademercado.functions.Auth
 import com.xacarana.milistademercado.models.MarketList
+import com.xacarana.milistademercado.models.Product
 import com.xacarana.milistademercado.models.User
 import com.xacarana.milistademercado.screens.CreateList
 import com.xacarana.milistademercado.screens.CreateProduct
@@ -32,6 +33,7 @@ import java.util.Date
 
 val usuario = User(name = "", emptyList())
 val authenticator = Auth()
+val list: MutableList<Product> = mutableListOf()
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -63,8 +65,8 @@ fun AppNavigator() {
         composable("register") { Register(navController, authenticator) }
         composable("login") { Login(navController, usuario, authenticator) }
         composable("menu") { Menu(navController, usuario) }
-        composable("create-list") { CreateList(navController, usuario) }
-        composable("create-product") { CreateProduct(navController, usuario) }
+        composable("create-list") { CreateList(navController, usuario, list) }
+        composable("create-product") { CreateProduct(navController, usuario, list) }
         composable("view-list") { ViewList(navController, usuario) }
     }
 }

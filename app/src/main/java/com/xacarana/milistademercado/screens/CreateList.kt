@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DateRange
@@ -28,105 +29,96 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.xacarana.milistademercado.R
+import com.xacarana.milistademercado.models.MarketList
 import com.xacarana.milistademercado.models.User
+import java.sql.Date
 import java.time.LocalDate
+import androidx.compose.foundation.lazy.items
+import com.xacarana.milistademercado.models.Product
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateList(navController: NavController, user: User){
+fun CreateList(navController: NavController, user: User, list: MutableList<Product>) {
 
-    var fecha by remember { mutableStateOf<LocalDate?>(null) }
-    var name by remember { mutableStateOf("") }
+    var fecha by remember { mutableStateOf<LocalDate?>(LocalDate.now()) }
+    var name by remember { mutableStateOf("Nombre") }
     var description by remember { mutableStateOf("") }
+    var lista = remember { mutableStateListOf(*list.toTypedArray()) }
+
+    val objectlista: MarketList = MarketList(
+        name = "Nombre",
+        description = "",
+        date = LocalDate.now(),
+        products = list
+    )
 
     Column {
 
         Row {
-            Button(onClick = { navController.navigate("menu") }) {
+            Button(onClick = {
+                list.clear()
+                navController.navigate("menu")
+            }) {
                 Text("REGRESAR")
             }
-            Button(onClick = { navController.navigate("menu") }) {
+            Button(onClick = {
+                list.clear()
+                navController.navigate("menu")
+            }) {
                 Text("CREAR")
             }
         }
 
-        TextField(value = "Nombre de la lista", onValueChange = {})
+        TextField(value = name, onValueChange = {
+            objectlista.name = name
+            name = it
+        })
 
         Text("Descripción:")
-
-        TextField(value = "", onValueChange = {})
+        TextField(value = description, onValueChange = {
+            objectlista.description
+            description = it
+        })
 
         Row {
             Text("Fecha")
-            DateTime(fechaSeleccionada = fecha, onFechaSeleccionada = { fecha = it})
-            //DatePicker(datepicker)
-
+            DateTime(fechaSeleccionada = fecha, onFechaSeleccionada = {
+                objectlista.date = fecha!!
+                fecha = it
+            })
         }
 
         Box() {
             Column {
 
                 Text("Objetos")
-                Button(onClick = { navController.navigate("create-product") }) {
+                Button(onClick = {
+                    navController.navigate("create-product")
+                }) {
                     Text("AGREGAR")
                 }
                 LazyColumn {
-                    item {
-                        ProductWidget()
+                    items(lista) { elemento ->
+                        ProductWidget(
+                            elemento = elemento,
+                            onDelete = {
+                                list.remove(elemento)
+                                lista.remove(elemento)
+                            })
                     }
-                }
 
+                }
             }
         }
     }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DateTimeA(
-    fechaSeleccionada: LocalDate?,
-    onFechaSeleccionada: (LocalDate) -> Unit
-) {
-    val contexto = LocalContext.current
-    OutlinedTextField(
-        value = fechaSeleccionada?.toString() ?: "",
-        onValueChange = {},
-        label = { Text("Seleccionar fecha") },
-        readOnly = true,
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                val calendario = Calendar.getInstance()
-                val year = calendario.get(Calendar.YEAR)
-                val month = calendario.get(Calendar.MONTH)
-                val day = calendario.get(Calendar.DAY_OF_MONTH)
-
-                DatePickerDialog(
-                    contexto,
-                    { _, anio, mes, dia ->
-                        val fecha = LocalDate.of(anio, mes + 1, dia)
-                        onFechaSeleccionada(fecha)
-                    },
-                    year,
-                    month,
-                    day
-                ).show()
-            },
-        trailingIcon = {
-            Icon(
-                imageVector = Icons.Default.DateRange,
-                contentDescription = "Seleccionar fecha"
-            )
-        }
-    )
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -171,20 +163,25 @@ fun DateTime(
 }
 
 @Composable
-fun ProductWidget() {
-    Box(){
+fun ProductWidget(elemento: Product, onDelete: () -> Unit) {
+    Box() {
         Row {
-            Image(painter = painterResource(id = R.drawable.tomate), contentDescription = "tomate")
+            Image(
+                painter = painterResource(id = elemento.idProduct),
+                contentDescription = elemento.name
+            )
             Column {
-                Text("Tomates")
-                Text("Unidades: 20kg")
+                Text(elemento.name)
+                Text("Unidades: ${elemento.amount}${elemento.und}")
             }
             Icon(
+                modifier = Modifier.clickable(onClick = {
+                    onDelete()
+                }),
                 imageVector = Icons.Default.Delete,
                 contentDescription = "delete"
             )
         }
     }
 }
-
 
