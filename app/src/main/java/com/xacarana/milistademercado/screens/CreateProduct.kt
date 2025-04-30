@@ -41,7 +41,7 @@ fun CreateProduct(navController: NavController, user: User, list: MutableList<Pr
         amount = 1f,
         und = "und",
         idPhoto = R.drawable.tomate,
-        check = false
+        check = "none"
     ))
     }
 

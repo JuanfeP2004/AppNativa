@@ -48,7 +48,7 @@ class Database : ViewModel() {
                         amount = producto.get("amount").toString().toFloat(),
                         idPhoto = producto.get("idImage").toString().toInt(),
                         und = producto.get("units").toString(),
-                        check = producto.get("check").toString().toBoolean()
+                        check = producto.get("check").toString()
                     ))
                 }
 

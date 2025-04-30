@@ -1,6 +1,7 @@
 package com.xacarana.milistademercado.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,7 +17,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.navigation.NavController
 import com.xacarana.milistademercado.R
 import com.xacarana.milistademercado.models.MarketList
@@ -64,22 +72,41 @@ fun ViewList(navController: NavController, user: User, list: ViewListModel){
 
 @Composable
 fun ProductListWidget(product: Product) {
+
+    var check by remember { mutableStateOf(product.check) }
+
     Box(){
         Row {
             Image(painter = painterResource(id = product.idProduct), contentDescription = product.name)
             Column {
-                Text(product.name)
-                Text("Unidades: ${product.amount}${product.und}")
+                Text(
+                    product.name,
+                    textDecoration = if (check!="none") TextDecoration.LineThrough else null
+                )
+                Text(
+                    "Unidades: ${product.amount}${product.und}",
+                    textDecoration = if (check!="none") TextDecoration.LineThrough else null
+                )
+                if (check != "none")
+                    Text(if(check == "checked")"COMPRADO" else "ELIMINADO")
             }
             Column {
-                Icon(
-                    imageVector = Icons.Default.CheckCircle,
-                    contentDescription = "delete"
-                )
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "delete"
-                )
+                if(check == "none") {
+                    Icon(
+                        modifier = Modifier.clickable(onClick = {
+                            check = "checked"
+                        }),
+                        imageVector = Icons.Default.CheckCircle,
+                        contentDescription = "delete"
+                    )
+                    Icon(
+                        modifier = Modifier.clickable(onClick = {
+                            check = "deleted"
+                        }),
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "delete"
+                    )
+                }
             }
         }
     }
