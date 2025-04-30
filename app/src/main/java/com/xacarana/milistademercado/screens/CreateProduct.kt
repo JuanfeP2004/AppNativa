@@ -40,8 +40,7 @@ fun CreateProduct(navController: NavController, user: User, list: MutableList<Pr
         name = "Tomate",
         amount = 1f,
         und = "und",
-        idPhoto = R.drawable.tomate,
-        check = false)
+        idPhoto = R.drawable.tomate)
     )
     }
 
@@ -56,8 +55,10 @@ fun CreateProduct(navController: NavController, user: User, list: MutableList<Pr
                 Text("REGRESAR")
             }
             Button(onClick = {
-                list.add(product)
-                navController.navigate("create-list")
+                if(ValidateProduct(product)) {
+                    list.add(product)
+                    navController.navigate("create-list")
+                }
             }) {
                 Text("CREAR")
             }
@@ -165,4 +166,12 @@ fun ProductImageWidget(name: String, imageId : Int, product: Product, nameState:
         )
         Text(name)
     }
+}
+
+
+fun ValidateProduct(product: Product): Boolean {
+    if(product.name == "" || product.name.isNullOrBlank()) return false
+    if(product.und == "" || product.und.isNullOrBlank()) return false
+    if(product.amount <= 0.0f) return false
+    return true
 }

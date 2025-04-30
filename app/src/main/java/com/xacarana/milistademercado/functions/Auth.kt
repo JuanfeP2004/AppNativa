@@ -67,6 +67,7 @@ class Auth : ViewModel() {
                 auth.signInWithEmailAndPassword(email, password).await()
                 usuario = auth.currentUser
                 user.ModifyName(getUserName(usuario?.uid!!))
+                user.ModifyId(usuario?.uid!!)
                 onSuccess()
             } catch (e: Exception) {
                 val mensaje = e?.message ?: "Error desconocido"
@@ -78,6 +79,7 @@ class Auth : ViewModel() {
         user: User,
         onSuccess: () -> Unit
     ) {
+        user.ModifyId("")
         user.ModifyName("")
         user.ModifyList(emptyList())
         auth.signOut()

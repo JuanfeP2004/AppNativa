@@ -19,6 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.xacarana.milistademercado.functions.Auth
+import com.xacarana.milistademercado.functions.Database
 import com.xacarana.milistademercado.models.MarketList
 import com.xacarana.milistademercado.models.Product
 import com.xacarana.milistademercado.models.User
@@ -31,8 +32,9 @@ import com.xacarana.milistademercado.screens.Register
 import com.xacarana.milistademercado.screens.ViewList
 import java.util.Date
 
-val usuario = User(name = "", emptyList())
+val usuario = User(id = "", name = "", emptyList())
 val authenticator = Auth()
+val firebase = Database()
 val list: MutableList<Product> = mutableListOf()
 
 class MainActivity : ComponentActivity() {
@@ -65,7 +67,7 @@ fun AppNavigator() {
         composable("register") { Register(navController, authenticator) }
         composable("login") { Login(navController, usuario, authenticator) }
         composable("menu") { Menu(navController, usuario) }
-        composable("create-list") { CreateList(navController, usuario, list) }
+        composable("create-list") { CreateList(navController, usuario, firebase, list) }
         composable("create-product") { CreateProduct(navController, usuario, list) }
         composable("view-list") { ViewList(navController, usuario) }
     }

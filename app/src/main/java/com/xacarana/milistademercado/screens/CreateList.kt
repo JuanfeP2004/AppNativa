@@ -41,22 +41,24 @@ import com.xacarana.milistademercado.models.User
 import java.sql.Date
 import java.time.LocalDate
 import androidx.compose.foundation.lazy.items
+import com.xacarana.milistademercado.functions.Database
 import com.xacarana.milistademercado.models.Product
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateList(navController: NavController, user: User, list: MutableList<Product>) {
+fun CreateList(navController: NavController, user: User, db: Database, list: MutableList<Product>) {
 
     var fecha by remember { mutableStateOf<LocalDate?>(LocalDate.now()) }
     var name by remember { mutableStateOf("Nombre") }
     var description by remember { mutableStateOf("") }
     var lista = remember { mutableStateListOf(*list.toTypedArray()) }
+    var messageError by remember { mutableStateOf("") }
 
     val objectlista: MarketList = MarketList(
-        name = "Nombre",
-        description = "",
-        date = LocalDate.now(),
+        name = name,
+        description = description,
+        date = fecha!!,
         products = list
     )
 
@@ -70,22 +72,40 @@ fun CreateList(navController: NavController, user: User, list: MutableList<Produ
                 Text("REGRESAR")
             }
             Button(onClick = {
-                list.clear()
-                navController.navigate("menu")
+
+                val check = ValidateList(objectlista)
+
+                if(check == "") {
+                    messageError = ""
+
+                    db.createList(
+                        objectlista,
+                        user,
+                        {
+                            list.clear()
+                            navController.navigate("menu")
+                        },
+                        { messageError = it }
+                    )
+
+
+                }
+                else
+                    messageError = check
             }) {
                 Text("CREAR")
             }
         }
 
         TextField(value = name, onValueChange = {
-            objectlista.name = name
             name = it
+            objectlista.name = name
         })
 
         Text("Descripción:")
         TextField(value = description, onValueChange = {
-            objectlista.description
             description = it
+            objectlista.description
         })
 
         Row {
@@ -95,6 +115,8 @@ fun CreateList(navController: NavController, user: User, list: MutableList<Produ
                 fecha = it
             })
         }
+
+        Text(messageError)
 
         Box() {
             Column {
@@ -112,6 +134,7 @@ fun CreateList(navController: NavController, user: User, list: MutableList<Produ
                             onDelete = {
                                 list.remove(elemento)
                                 lista.remove(elemento)
+                                objectlista.products == list
                             })
                     }
 
@@ -185,3 +208,11 @@ fun ProductWidget(elemento: Product, onDelete: () -> Unit) {
     }
 }
 
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun ValidateList(list: MarketList): String {
+    if (list.name == "" || list.name.isNullOrBlank()) return "El nombre no puede estar en blanco"
+    if (list.date.isBefore(LocalDate.now())) return "La fecha no puede ser anterior a la actual"
+    if (list.products.count() == 0) return "La lista de productos no puede estar vacia"
+    return ""
+}
