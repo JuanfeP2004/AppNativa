@@ -41,6 +41,7 @@ val list: MutableList<Product> = mutableListOf()
 
 @RequiresApi(Build.VERSION_CODES.O)
 val viewlist = ViewListModel(MarketList(
+    id = "",
     name = "",
     description = "",
     date = LocalDate.now(),
@@ -80,7 +81,7 @@ fun AppNavigator() {
         composable("menu") { Menu(navController, usuario, firebase, viewlist) }
         composable("create-list") { CreateList(navController, usuario, firebase, list) }
         composable("create-product") { CreateProduct(navController, usuario, list) }
-        composable("view-list") { ViewList(navController, usuario, viewlist) }
+        composable("view-list") { ViewList(navController, usuario, viewlist, firebase) }
     }
 }
 

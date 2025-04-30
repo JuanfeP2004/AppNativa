@@ -56,6 +56,7 @@ fun CreateList(navController: NavController, user: User, db: Database, list: Mut
     var messageError by remember { mutableStateOf("") }
 
     val objectlista: MarketList = MarketList(
+        id = "",
         name = name,
         description = description,
         date = fecha!!,

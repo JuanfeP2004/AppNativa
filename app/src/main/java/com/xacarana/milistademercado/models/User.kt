@@ -34,4 +34,8 @@ class User (
     fun AddList(list: MarketList){
         _listas.value?.add(list)
     }
+
+    fun RemoveList(list: MarketList){
+        _listas.value?.remove(list)
+    }
 }

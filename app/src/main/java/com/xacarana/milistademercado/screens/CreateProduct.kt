@@ -37,6 +37,7 @@ fun CreateProduct(navController: NavController, user: User, list: MutableList<Pr
     var seleccion by remember { mutableStateOf("und") }
 
     var product by remember {  mutableStateOf(Product(
+        id = "",
         name = "Tomate",
         amount = 1f,
         und = "und",

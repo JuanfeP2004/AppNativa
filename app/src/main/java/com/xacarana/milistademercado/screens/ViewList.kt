@@ -26,21 +26,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.navigation.NavController
+import com.google.firebase.Firebase
 import com.xacarana.milistademercado.R
+import com.xacarana.milistademercado.firebase
+import com.xacarana.milistademercado.functions.Database
 import com.xacarana.milistademercado.models.MarketList
 import com.xacarana.milistademercado.models.Product
 import com.xacarana.milistademercado.models.User
 import com.xacarana.milistademercado.models.ViewListModel
+import com.xacarana.milistademercado.usuario
 
 @Composable
-fun ViewList(navController: NavController, user: User, list: ViewListModel){
+fun ViewList(navController: NavController, user: User, list: ViewListModel, db: Database){
     Surface {
         Column {
             Row {
                 Button(onClick = { navController.navigate("menu") }) {
                     Text("REGRESAR")
                 }
-                Button(onClick = { navController.navigate("menu") }) {
+                Button(onClick = {
+                    db.deleteList(
+                        user,
+                        list.list.value!!,
+                        { navController.navigate("menu")},
+                        {}
+                    )
+                }) {
                     Text("ELIMINAR")
                 }
             }
@@ -61,7 +72,7 @@ fun ViewList(navController: NavController, user: User, list: ViewListModel){
                     Text("Objetos")
                     LazyColumn {
                         items(list.list.value!!.products) {
-                            element -> ProductListWidget(element)
+                            element -> ProductListWidget(element, list.list.value!!)
                         }
                     }
                 }
@@ -71,7 +82,7 @@ fun ViewList(navController: NavController, user: User, list: ViewListModel){
 }
 
 @Composable
-fun ProductListWidget(product: Product) {
+fun ProductListWidget(product: Product, list: MarketList) {
 
     var check by remember { mutableStateOf(product.check) }
 
@@ -95,6 +106,7 @@ fun ProductListWidget(product: Product) {
                     Icon(
                         modifier = Modifier.clickable(onClick = {
                             check = "checked"
+                            firebase.modifyProduct(check, usuario, list, product)
                         }),
                         imageVector = Icons.Default.CheckCircle,
                         contentDescription = "delete"
@@ -102,6 +114,7 @@ fun ProductListWidget(product: Product) {
                     Icon(
                         modifier = Modifier.clickable(onClick = {
                             check = "deleted"
+                            firebase.modifyProduct(check, usuario, list, product)
                         }),
                         imageVector = Icons.Default.Close,
                         contentDescription = "delete"

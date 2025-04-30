@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.xacarana.milistademercado.models.MarketList
 import com.xacarana.milistademercado.models.Product
@@ -44,6 +45,7 @@ class Database : ViewModel() {
 
                 for (producto in docProductos.documents){
                     productList.add(Product(
+                        id = producto.id,
                         name = producto.get("name").toString(),
                         amount = producto.get("amount").toString().toFloat(),
                         idPhoto = producto.get("idImage").toString().toInt(),
@@ -53,6 +55,7 @@ class Database : ViewModel() {
                 }
 
                 list.add(MarketList(
+                    id = document.id,
                     name = document.get("name").toString(),
                     description = document.get("description").toString(),
                     date = LocalDate.parse(document.get("date") as CharSequence?, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
@@ -102,6 +105,38 @@ class Database : ViewModel() {
         }
 
         user.AddList(list)
+        onSuccess()
+    }
+
+    fun modifyProduct(check: String, user: User, list: MarketList, product: Product){
+
+        val listreference = db.collection("Usuarios").document(user.id.value!!)
+            .collection("Listas").document(list.id)
+
+            listreference.collection("Productos").document(product.id).update(
+                "check", check
+            )
+
+            if(check == "checked")
+                recalculateList(list, listreference)
+    }
+
+    fun recalculateList(list: MarketList, reference: DocumentReference){
+
+        val newCompletion : Float = list.completion + (100f / list.products.count())
+
+        reference.update("completion", newCompletion)
+    }
+
+    fun deleteList(
+        user: User,
+        list: MarketList,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit) {
+        db.collection("Usuarios").document(user.id.value!!)
+            .collection("Listas").document(list.id).delete()
+
+        user.RemoveList(list)
         onSuccess()
     }
 }
