@@ -27,12 +27,14 @@ import com.xacarana.milistademercado.authenticator
 import com.xacarana.milistademercado.functions.Database
 import com.xacarana.milistademercado.models.MarketList
 import com.xacarana.milistademercado.models.User
+import com.xacarana.milistademercado.models.ViewListModel
+import com.xacarana.milistademercado.viewlist
 import kotlinx.coroutines.launch
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Menu(navController: NavController, user: User, db: Database){
+fun Menu(navController: NavController, user: User, db: Database, viewmodel: ViewListModel){
 
     var messageError by remember { mutableStateOf("") }
     //val coroutineScope = rememberCoroutineScope()
@@ -69,10 +71,12 @@ fun Menu(navController: NavController, user: User, db: Database){
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ListWidget(navController: NavController, list: MarketList){
     Box(
         modifier = Modifier.clickable {
+            viewlist.ModifyList(list)
             navController.navigate("view-list")
         }
     ){

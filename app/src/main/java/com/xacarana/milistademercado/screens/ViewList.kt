@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
@@ -18,10 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.xacarana.milistademercado.R
+import com.xacarana.milistademercado.models.MarketList
+import com.xacarana.milistademercado.models.Product
 import com.xacarana.milistademercado.models.User
+import com.xacarana.milistademercado.models.ViewListModel
 
 @Composable
-fun ViewList(navController: NavController, user: User){
+fun ViewList(navController: NavController, user: User, list: ViewListModel){
     Surface {
         Column {
             Row {
@@ -33,27 +37,23 @@ fun ViewList(navController: NavController, user: User){
                 }
             }
 
-            TextField(value = "Nombre de la lista", onValueChange = {})
+            TextField(value = list.list.value!!.name, onValueChange = {}, readOnly = true)
 
             Text("Descripción:")
 
-            TextField(value = "", onValueChange = {})
+            TextField(value = list.list.value!!.description, onValueChange = {}, readOnly = true)
 
             Row {
                 Text("Fecha:")
-                Text("")
+                Text(list.list.value!!.date.toString())
             }
 
             Box() {
                 Column {
-
                     Text("Objetos")
                     LazyColumn {
-                        item {
-                            ProductListWidget()
-                        }
-                        item {
-                            ProductListWidget()
+                        items(list.list.value!!.products) {
+                            element -> ProductListWidget(element)
                         }
                     }
                 }
@@ -63,13 +63,13 @@ fun ViewList(navController: NavController, user: User){
 }
 
 @Composable
-fun ProductListWidget() {
+fun ProductListWidget(product: Product) {
     Box(){
         Row {
-            Image(painter = painterResource(id = R.drawable.tomate), contentDescription = "tomate")
+            Image(painter = painterResource(id = product.idProduct), contentDescription = product.name)
             Column {
-                Text("Tomates")
-                Text("Unidades: 20kg")
+                Text(product.name)
+                Text("Unidades: ${product.amount}${product.und}")
             }
             Column {
                 Icon(

@@ -23,6 +23,7 @@ import com.xacarana.milistademercado.functions.Database
 import com.xacarana.milistademercado.models.MarketList
 import com.xacarana.milistademercado.models.Product
 import com.xacarana.milistademercado.models.User
+import com.xacarana.milistademercado.models.ViewListModel
 import com.xacarana.milistademercado.screens.CreateList
 import com.xacarana.milistademercado.screens.CreateProduct
 import com.xacarana.milistademercado.ui.theme.MiListaDeMercadoTheme
@@ -30,12 +31,22 @@ import com.xacarana.milistademercado.screens.Login
 import com.xacarana.milistademercado.screens.Menu
 import com.xacarana.milistademercado.screens.Register
 import com.xacarana.milistademercado.screens.ViewList
+import java.time.LocalDate
 import java.util.Date
 
 val usuario = User(id = "", name = "", mutableListOf())
 val firebase = Database()
 val authenticator = Auth(firebase)
 val list: MutableList<Product> = mutableListOf()
+
+@RequiresApi(Build.VERSION_CODES.O)
+val viewlist = ViewListModel(MarketList(
+    name = "",
+    description = "",
+    date = LocalDate.now(),
+    completion = 0.0f,
+    products = mutableListOf()
+))
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -66,10 +77,10 @@ fun AppNavigator() {
     NavHost(navController = navController, startDestination = "register") {
         composable("register") { Register(navController, authenticator) }
         composable("login") { Login(navController, usuario, authenticator) }
-        composable("menu") { Menu(navController, usuario, firebase) }
+        composable("menu") { Menu(navController, usuario, firebase, viewlist) }
         composable("create-list") { CreateList(navController, usuario, firebase, list) }
         composable("create-product") { CreateProduct(navController, usuario, list) }
-        composable("view-list") { ViewList(navController, usuario) }
+        composable("view-list") { ViewList(navController, usuario, viewlist) }
     }
 }
 
