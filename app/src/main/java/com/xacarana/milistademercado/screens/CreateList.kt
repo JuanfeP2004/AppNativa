@@ -59,6 +59,7 @@ fun CreateList(navController: NavController, user: User, db: Database, list: Mut
         name = name,
         description = description,
         date = fecha!!,
+        completion = 0.0f,
         products = list
     )
 

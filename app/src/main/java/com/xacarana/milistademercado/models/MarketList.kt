@@ -7,9 +7,11 @@ class MarketList(
     name: String,
     description: String,
     date: LocalDate,
+    completion: Float,
     products: List<Product>) {
     var name: String = name
     var description: String = description
     var date: LocalDate = date
+    var completion = completion
     var products: List<Product> = products
 }

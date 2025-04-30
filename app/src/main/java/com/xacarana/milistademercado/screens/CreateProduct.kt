@@ -40,8 +40,9 @@ fun CreateProduct(navController: NavController, user: User, list: MutableList<Pr
         name = "Tomate",
         amount = 1f,
         und = "und",
-        idPhoto = R.drawable.tomate)
-    )
+        idPhoto = R.drawable.tomate,
+        check = false
+    ))
     }
 
     var name = remember { mutableStateOf(product.name) }

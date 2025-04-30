@@ -1,5 +1,7 @@
 package com.xacarana.milistademercado.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
@@ -25,6 +27,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.net.Authenticator
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Login(navController: NavController, user: User, authenticator: Auth) {
 

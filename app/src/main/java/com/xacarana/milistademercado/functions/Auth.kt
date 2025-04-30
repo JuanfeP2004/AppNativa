@@ -1,18 +1,22 @@
 package com.xacarana.milistademercado.functions
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.xacarana.milistademercado.models.MarketList
 import com.xacarana.milistademercado.models.User
 import kotlinx.coroutines.tasks.await
 import kotlin.text.set
 
-class Auth : ViewModel() {
+class Auth(database: Database) : ViewModel() {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val database = database
     private val db = FirebaseFirestore.getInstance()
 
     var usuario by mutableStateOf(auth.currentUser)
@@ -51,6 +55,7 @@ class Auth : ViewModel() {
                 }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun iniciarSesion(
         email: String,
         password: String,
@@ -68,6 +73,7 @@ class Auth : ViewModel() {
                 usuario = auth.currentUser
                 user.ModifyName(getUserName(usuario?.uid!!))
                 user.ModifyId(usuario?.uid!!)
+                user.ModifyList(getUserList(usuario?.uid!!))
                 onSuccess()
             } catch (e: Exception) {
                 val mensaje = e?.message ?: "Error desconocido"
@@ -81,7 +87,7 @@ class Auth : ViewModel() {
     ) {
         user.ModifyId("")
         user.ModifyName("")
-        user.ModifyList(emptyList())
+        user.ModifyList(mutableListOf())
         auth.signOut()
         usuario = null
         onSuccess()
@@ -92,8 +98,11 @@ class Auth : ViewModel() {
         return snapshot.getString("name")!!
     }
 
-    suspend fun getUserList(user: User): List<String> {
-        val snapshot = db.collection("Usuario").get().await()
-        return snapshot.documents.mapNotNull { it.getString("listas") }
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend fun getUserList(id: String): MutableList<MarketList> {
+        return database.getUserList(
+            id = id,
+            onFailure = {}
+        )
     }
 }

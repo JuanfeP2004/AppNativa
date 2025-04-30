@@ -32,9 +32,9 @@ import com.xacarana.milistademercado.screens.Register
 import com.xacarana.milistademercado.screens.ViewList
 import java.util.Date
 
-val usuario = User(id = "", name = "", emptyList())
-val authenticator = Auth()
+val usuario = User(id = "", name = "", mutableListOf())
 val firebase = Database()
+val authenticator = Auth(firebase)
 val list: MutableList<Product> = mutableListOf()
 
 class MainActivity : ComponentActivity() {
@@ -66,7 +66,7 @@ fun AppNavigator() {
     NavHost(navController = navController, startDestination = "register") {
         composable("register") { Register(navController, authenticator) }
         composable("login") { Login(navController, usuario, authenticator) }
-        composable("menu") { Menu(navController, usuario) }
+        composable("menu") { Menu(navController, usuario, firebase) }
         composable("create-list") { CreateList(navController, usuario, firebase, list) }
         composable("create-product") { CreateProduct(navController, usuario, list) }
         composable("view-list") { ViewList(navController, usuario) }
