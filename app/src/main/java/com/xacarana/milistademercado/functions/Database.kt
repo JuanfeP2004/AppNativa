@@ -1,5 +1,6 @@
 package com.xacarana.milistademercado.functions
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.xacarana.milistademercado.models.MarketList
 import com.xacarana.milistademercado.models.Product
 import com.xacarana.milistademercado.models.User
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -104,10 +106,12 @@ class Database : ViewModel() {
             )
         }
 
-        user.AddList(list)
+        user.listas.value?.add(list)
+
         onSuccess()
     }
 
+    @SuppressLint("SuspiciousIndentation")
     fun modifyProduct(check: String, user: User, list: MarketList, product: Product){
 
         val listreference = db.collection("Usuarios").document(user.id.value!!)
@@ -118,13 +122,14 @@ class Database : ViewModel() {
             )
 
             if(check == "checked")
-                recalculateList(list, listreference)
+                recalculateList(list, listreference, user)
     }
 
-    fun recalculateList(list: MarketList, reference: DocumentReference){
+    fun recalculateList(list: MarketList, reference: DocumentReference, usuario: User){
 
         val newCompletion : Float = list.completion + (100f / list.products.count())
 
+        usuario.listas.value?.find { it.id == list.id }?.completion = newCompletion
         reference.update("completion", newCompletion)
     }
 

@@ -41,19 +41,30 @@ import com.xacarana.milistademercado.models.User
 import java.sql.Date
 import java.time.LocalDate
 import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.rememberCoroutineScope
 import com.xacarana.milistademercado.functions.Database
+import com.xacarana.milistademercado.models.CreateListModel
+import com.xacarana.milistademercado.models.MarketListTrack
 import com.xacarana.milistademercado.models.Product
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateList(navController: NavController, user: User, db: Database, list: MutableList<Product>) {
+fun CreateList(
+    navController: NavController,
+    user: User,
+    db: Database,
+    list: MutableList<Product>,
+    createlist: CreateListModel) {
 
-    var fecha by remember { mutableStateOf<LocalDate?>(LocalDate.now()) }
-    var name by remember { mutableStateOf("Nombre") }
-    var description by remember { mutableStateOf("") }
+    var fecha by remember { mutableStateOf<LocalDate?>(createlist.list.value?.date!!) }
+    var name by remember { mutableStateOf(createlist.list.value?.name!!) }
+    var description by remember { mutableStateOf(createlist.list.value?.description!!) }
     var lista = remember { mutableStateListOf(*list.toTypedArray()) }
     var messageError by remember { mutableStateOf("") }
+
+    val coroutineScope = rememberCoroutineScope()
 
     val objectlista: MarketList = MarketList(
         id = "",
@@ -69,6 +80,9 @@ fun CreateList(navController: NavController, user: User, db: Database, list: Mut
         Row {
             Button(onClick = {
                 list.clear()
+                createlist.list.value?.name = ""
+                createlist.list.value?.description = ""
+                createlist.list.value?.date = LocalDate.now()
                 navController.navigate("menu")
             }) {
                 Text("REGRESAR")
@@ -85,6 +99,11 @@ fun CreateList(navController: NavController, user: User, db: Database, list: Mut
                         user,
                         {
                             list.clear()
+
+                            createlist.list.value?.name = ""
+                            createlist.list.value?.description = ""
+                            createlist.list.value?.date = LocalDate.now()
+
                             navController.navigate("menu")
                         },
                         { messageError = it }
@@ -102,12 +121,14 @@ fun CreateList(navController: NavController, user: User, db: Database, list: Mut
         TextField(value = name, onValueChange = {
             name = it
             objectlista.name = name
+            createlist.list.value?.name = name!!
         })
 
         Text("Descripción:")
         TextField(value = description, onValueChange = {
             description = it
             objectlista.description
+            createlist.list.value?.description = description!!
         })
 
         Row {
@@ -115,6 +136,7 @@ fun CreateList(navController: NavController, user: User, db: Database, list: Mut
             DateTime(fechaSeleccionada = fecha, onFechaSeleccionada = {
                 objectlista.date = fecha!!
                 fecha = it
+                createlist.list.value?.date = fecha!!
             })
         }
 
@@ -137,6 +159,7 @@ fun CreateList(navController: NavController, user: User, db: Database, list: Mut
                                 list.remove(elemento)
                                 lista.remove(elemento)
                                 objectlista.products == list
+                                //createlist.ModifyList(objectlista as MarketListTrack)
                             })
                     }
 

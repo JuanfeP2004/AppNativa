@@ -37,9 +37,20 @@ import kotlinx.coroutines.launch
 fun Menu(navController: NavController, user: User, db: Database, viewmodel: ViewListModel){
 
     var messageError by remember { mutableStateOf("") }
-    //val coroutineScope = rememberCoroutineScope()
+    var chargeMessage by remember { mutableStateOf("Cargando listas") }
+    var items by remember { mutableStateOf<List<MarketList>>(emptyList()) }
+    val coroutineScope = rememberCoroutineScope()
 
-    val list: List<MarketList> = user.listas.value!!
+    val list: List<MarketList>
+    //val list: List<MarketList> = user.listas.value!!
+
+    LaunchedEffect(Unit) {
+        coroutineScope.launch {
+            items = db.getUserList(user.id.value!!) {messageError == it}
+            chargeMessage = "No tienes ninguna lista"
+        }
+    }
+
 
     Surface {
         Column {
@@ -63,9 +74,14 @@ fun Menu(navController: NavController, user: User, db: Database, viewmodel: View
             Text(messageError)
 
             LazyColumn {
-                items(list) { elemento ->
-                    ListWidget(navController, elemento)
-                }
+                if(items.count() == 0)
+                    item {
+                        Text(chargeMessage)
+                    }
+                else
+                    items(items) { elemento ->
+                        ListWidget(navController, elemento)
+                    }
             }
         }
     }

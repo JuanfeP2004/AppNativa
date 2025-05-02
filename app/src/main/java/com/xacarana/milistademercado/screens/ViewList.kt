@@ -107,6 +107,9 @@ fun ProductListWidget(product: Product, list: MarketList) {
                         modifier = Modifier.clickable(onClick = {
                             check = "checked"
                             firebase.modifyProduct(check, usuario, list, product)
+                            usuario.listas.value?.find { it.id == list.id }?.products?.find {
+                                it.id == product.id
+                            }?.check = check
                         }),
                         imageVector = Icons.Default.CheckCircle,
                         contentDescription = "delete"
@@ -115,6 +118,9 @@ fun ProductListWidget(product: Product, list: MarketList) {
                         modifier = Modifier.clickable(onClick = {
                             check = "deleted"
                             firebase.modifyProduct(check, usuario, list, product)
+                            usuario.listas.value?.find { it.id == list.id }?.products?.find {
+                                it.id == product.id
+                            }?.check = check
                         }),
                         imageVector = Icons.Default.Close,
                         contentDescription = "delete"

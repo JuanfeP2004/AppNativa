@@ -26,12 +26,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.xacarana.milistademercado.R
+import com.xacarana.milistademercado.models.CreateListModel
 import com.xacarana.milistademercado.models.User
 import com.xacarana.milistademercado.models.Product
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateProduct(navController: NavController, user: User, list: MutableList<Product>){
+fun CreateProduct(
+    navController: NavController,
+    user: User,
+    list: MutableList<Product>,
+    createlist: CreateListModel){
 
     val opciones = listOf("und", "kg", "lbs", "lts", "cm")
     var seleccion by remember { mutableStateOf("und") }

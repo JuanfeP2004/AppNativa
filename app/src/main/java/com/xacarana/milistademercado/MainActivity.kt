@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
@@ -20,12 +21,15 @@ import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.xacarana.milistademercado.functions.Auth
 import com.xacarana.milistademercado.functions.Database
+import com.xacarana.milistademercado.models.CreateListModel
 import com.xacarana.milistademercado.models.MarketList
+import com.xacarana.milistademercado.models.MarketListTrack
 import com.xacarana.milistademercado.models.Product
 import com.xacarana.milistademercado.models.User
 import com.xacarana.milistademercado.models.ViewListModel
 import com.xacarana.milistademercado.screens.CreateList
 import com.xacarana.milistademercado.screens.CreateProduct
+import com.xacarana.milistademercado.screens.DateTime
 import com.xacarana.milistademercado.ui.theme.MiListaDeMercadoTheme
 import com.xacarana.milistademercado.screens.Login
 import com.xacarana.milistademercado.screens.Menu
@@ -47,6 +51,16 @@ val viewlist = ViewListModel(MarketList(
     date = LocalDate.now(),
     completion = 0.0f,
     products = mutableListOf()
+))
+
+@RequiresApi(Build.VERSION_CODES.O)
+val createlist = CreateListModel(MarketList(
+    id = "",
+    name = "Nombre",
+    description = "",
+    date = LocalDate.now(),
+    completion = 0.0f,
+    products = mutableListOf<Product>() // as SnapshotStateList<Product>
 ))
 
 class MainActivity : ComponentActivity() {
@@ -79,8 +93,8 @@ fun AppNavigator() {
         composable("register") { Register(navController, authenticator) }
         composable("login") { Login(navController, usuario, authenticator) }
         composable("menu") { Menu(navController, usuario, firebase, viewlist) }
-        composable("create-list") { CreateList(navController, usuario, firebase, list) }
-        composable("create-product") { CreateProduct(navController, usuario, list) }
+        composable("create-list") { CreateList(navController, usuario, firebase, list, createlist) }
+        composable("create-product") { CreateProduct(navController, usuario, list, createlist) }
         composable("view-list") { ViewList(navController, usuario, viewlist, firebase) }
     }
 }
