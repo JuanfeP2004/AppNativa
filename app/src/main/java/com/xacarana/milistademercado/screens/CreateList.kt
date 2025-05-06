@@ -29,7 +29,6 @@ import com.xacarana.milistademercado.models.CreateListModel
 import com.xacarana.milistademercado.models.MarketList
 import com.xacarana.milistademercado.models.Product
 import com.xacarana.milistademercado.models.User
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -47,7 +46,6 @@ fun CreateList(
     var description by remember { mutableStateOf(createlist.list.value?.description!!) }
     var lista = remember { mutableStateListOf(*list.toTypedArray()) }
     var messageError by remember { mutableStateOf("") }
-    val coroutineScope = rememberCoroutineScope()
 
     val objectlista = MarketList(
         id = "",
@@ -61,11 +59,13 @@ fun CreateList(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(24.dp)
             .background(Color(0xFFF6FFFA))
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -79,9 +79,10 @@ fun CreateList(
                     }
                     navController.navigate("menu")
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB1F4D8))
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB1F4D8)),
+                shape = MaterialTheme.shapes.medium
             ) {
-                Text("← Regresar", color = Color.Black)
+                Text("← REGRESAR", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
             }
 
             Button(
@@ -102,16 +103,24 @@ fun CreateList(
                         messageError = check
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7EECA5))
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2ECC71)),
+                shape = MaterialTheme.shapes.medium
             ) {
-                Text("Crear lista", color = Color.White)
+                Text("CREAR", fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Text(
+            text = "Mi Lista",
+            fontSize = 22.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(bottom = 16.dp)
+        )
 
         OutlinedTextField(
-            label = { Text("Nombre de la lista") },
+            label = { Text("Nombre de la lista", fontSize = 14.sp) },
             value = name,
             onValueChange = {
                 name = it
@@ -122,10 +131,10 @@ fun CreateList(
             singleLine = true
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            label = { Text("Descripción") },
+            label = { Text("Descripción", fontSize = 14.sp) },
             value = description,
             onValueChange = {
                 description = it
@@ -136,7 +145,7 @@ fun CreateList(
             maxLines = 3
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         DateTime(
             fechaSeleccionada = fecha,
@@ -155,20 +164,20 @@ fun CreateList(
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "Productos agregados",
-            fontSize = 20.sp,
+            text = "Objetos",
+            fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF2ECC71)
         )
 
         Button(
             modifier = Modifier
-                .padding(vertical = 12.dp)
+                .padding(vertical = 16.dp)
                 .fillMaxWidth(),
             onClick = { navController.navigate("create-product") },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF76D7C4))
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2ECC71))
         ) {
-            Text("Agregar producto", color = Color.White)
+            Text("AGREGAR", fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
         }
 
         LazyColumn {
@@ -210,7 +219,7 @@ fun DateTime(
         OutlinedTextField(
             value = fechaSeleccionada?.toString() ?: "",
             onValueChange = {},
-            label = { Text("Seleccionar fecha") },
+            label = { Text("Fecha", fontSize = 14.sp) },
             readOnly = true,
             enabled = false,
             modifier = Modifier.fillMaxWidth()
@@ -223,12 +232,13 @@ fun ProductWidget(product: Product, onDelete: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 6.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFEEFCF5))
+            .padding(vertical = 8.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFEEFCF5)),
+        shape = MaterialTheme.shapes.medium
     ) {
         Row(
             modifier = Modifier
-                .padding(12.dp),
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -236,12 +246,12 @@ fun ProductWidget(product: Product, onDelete: () -> Unit) {
                 Image(
                     painter = painterResource(id = product.idProduct),
                     contentDescription = product.name,
-                    modifier = Modifier.size(60.dp)
+                    modifier = Modifier.size(64.dp)
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
-                    Text(product.name, fontWeight = FontWeight.Bold)
-                    Text("Unidades: ${product.amount} ${product.und}")
+                    Text(product.name, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text("Unidades: ${product.amount} ${product.und}", fontSize = 14.sp)
                 }
             }
             Icon(
@@ -263,4 +273,7 @@ fun ValidateList(list: MarketList): String {
     if (list.products.isEmpty()) return "La lista no puede estar vacía"
     return ""
 }
+
+
+
 
