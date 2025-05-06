@@ -3,112 +3,154 @@ package com.xacarana.milistademercado.screens
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.xacarana.milistademercado.authenticator
 import com.xacarana.milistademercado.functions.Database
 import com.xacarana.milistademercado.models.MarketList
 import com.xacarana.milistademercado.models.User
 import com.xacarana.milistademercado.models.ViewListModel
+import com.xacarana.milistademercado.ui.theme.ScreenPadding
 import com.xacarana.milistademercado.viewlist
 import kotlinx.coroutines.launch
 
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Menu(navController: NavController, user: User, db: Database, viewmodel: ViewListModel){
-
+fun Menu(navController: NavController, user: User, db: Database, viewmodel: ViewListModel) {
     var messageError by remember { mutableStateOf("") }
-    var chargeMessage by remember { mutableStateOf("Cargando listas") }
+    var chargeMessage by remember { mutableStateOf("Cargando listas...") }
     var items by remember { mutableStateOf<List<MarketList>>(emptyList()) }
     val coroutineScope = rememberCoroutineScope()
 
-    val list: List<MarketList>
-    //val list: List<MarketList> = user.listas.value!!
-
     LaunchedEffect(Unit) {
         coroutineScope.launch {
-            items = db.getUserList(user.id.value!!) {messageError == it}
-            chargeMessage = "No tienes ninguna lista"
+            items = db.getUserList(user.id.value!!) { messageError = it }
+            if (items.isEmpty()) chargeMessage = "No tienes ninguna lista"
         }
     }
 
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .then(ScreenPadding)
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
 
-    Surface {
-        Column {
-            Icon(
-                imageVector = Icons.Default.Settings,
-                contentDescription = "configuracion",
-                modifier = Modifier.clickable(onClick = {
-                    //Codigo temporal, no final
-                    authenticator.cerrarSesion(
-                        user)
-                        {navController.navigate("login")}
-                }))
-            Text("BIENVENIDO ${user.name.value}")
-            Text("Que quieres comprar hoy?")
+            // Encabezado y botón de configuración
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Top
+            ) {
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(
+                        text = "Bienvenido, ${user.name.value}",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF2ECC71)
+                    )
+                    Text(
+                        text = "¿Qué quieres comprar hoy?",
+                        fontSize = 16.sp,
+                        color = Color(0xFF262626)
+                    )
+                }
 
-            Button(onClick = { navController.navigate("create-list") }) {
-                Text("CREAR LISTA")
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "Configuración",
+                    tint = Color.Gray,
+                    modifier = Modifier
+                        .size(28.dp)
+                        .clickable {
+                            navController.navigate("settings")
+                        }
+                )
             }
 
-            Text("MIS LISTAS")
-            Text(messageError)
+            // Botón de nueva lista
+            Button(
+                onClick = { navController.navigate("create-list") },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7EECA5)),
+                modifier = Modifier.align(Alignment.Start)
+            ) {
+                Text("Crear nueva lista", color = Color.White)
+            }
 
-            LazyColumn {
-                if(items.count() == 0)
+            // Título de listas
+            Text(
+                text = "Mis listas",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF2ECC71)
+            )
+
+            // Mostrar errores o estado
+            if (messageError.isNotEmpty()) {
+                Text(text = messageError, color = Color.Red)
+            }
+
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                if (items.isEmpty()) {
                     item {
                         Text(chargeMessage)
                     }
-                else
+                } else {
                     items(items) { elemento ->
-                        ListWidget(navController, elemento)
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    viewlist.ModifyList(elemento)
+                                    navController.navigate("view-list")
+                                },
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFFEEFCF5))
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Text(
+                                    text = elemento.name,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 18.sp,
+                                    color = Color(0xFF2ECC71)
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Column {
+                                        Text("Para: ${elemento.date}")
+                                        Text("Objetos: ${elemento.products.size}")
+                                    }
+                                    Column(horizontalAlignment = Alignment.End) {
+                                        Text("Completado:")
+                                        Text(
+                                            "${elemento.completion}%",
+                                            color = Color(0xFF2ECC71),
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
+                }
             }
         }
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun ListWidget(navController: NavController, list: MarketList){
-    Box(
-        modifier = Modifier.clickable {
-            viewlist.ModifyList(list)
-            navController.navigate("view-list")
-        }
-    ){
-        Box(){}
-        Column {
-            Text(list.name)
-            Row {
-                Column {
-                    Text("Para: ${list.date.toString()}")
-                    Text("Objetos: ${list.products.count()}")
-                }
-                Column {
-                    Text("Completado:")
-                    Text("${list.completion}%")
-                }
-            }
-        }
-    }
-}
+
+
+
