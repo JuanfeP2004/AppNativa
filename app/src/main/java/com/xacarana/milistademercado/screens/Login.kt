@@ -70,8 +70,8 @@ fun Login(navController: NavController, user: User, authenticator: Auth) {
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Inicio de sesion",
-                fontSize = 16.sp,
+                text = "Inicio de sesión",
+                fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = TextColor,
                 fontFamily = FontFamily.SansSerif
@@ -80,8 +80,8 @@ fun Login(navController: NavController, user: User, authenticator: Auth) {
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = "Ingresa tu nombre:",
-                fontSize = 14.sp,
+                text = "Ingresa tu correo:",
+                fontSize = 20.sp,
                 color = TextColor,
                 fontFamily = FontFamily.SansSerif
             )
@@ -108,7 +108,7 @@ fun Login(navController: NavController, user: User, authenticator: Auth) {
 
             Text(
                 text = "Ingresa tu contraseña:",
-                fontSize = 14.sp,
+                fontSize = 18.sp,
                 color = TextColor,
                 fontFamily = FontFamily.SansSerif
             )
@@ -137,7 +137,7 @@ fun Login(navController: NavController, user: User, authenticator: Auth) {
                 Text(
                     text = messageError,
                     color = Color.Red,
-                    fontSize = 14.sp,
+                    fontSize = 18.sp,
                     fontFamily = FontFamily.SansSerif
                 )
             }

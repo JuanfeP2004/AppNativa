@@ -2,17 +2,23 @@ package com.xacarana.milistademercado.screens
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,7 +27,7 @@ import com.xacarana.milistademercado.functions.Database
 import com.xacarana.milistademercado.models.MarketList
 import com.xacarana.milistademercado.models.User
 import com.xacarana.milistademercado.models.ViewListModel
-import com.xacarana.milistademercado.ui.theme.ScreenPadding
+import com.xacarana.milistademercado.ui.theme.*
 import com.xacarana.milistademercado.viewlist
 import kotlinx.coroutines.launch
 
@@ -43,65 +49,93 @@ fun Menu(navController: NavController, user: User, db: Database, viewmodel: View
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .then(ScreenPadding)
+            .background(BackgroundLight)
+            .padding(horizontal = 24.dp)
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
-
-            // Encabezado y botón de configuración
-            Row(
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
+        ) {
+            // Icono ajustes
+            Box(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Top
+                contentAlignment = Alignment.TopStart
             ) {
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(
-                        text = "Bienvenido, ${user.name.value}",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF2ECC71)
-                    )
-                    Text(
-                        text = "¿Qué quieres comprar hoy?",
-                        fontSize = 16.sp,
-                        color = Color(0xFF262626)
+                IconButton(
+                    onClick = { navController.navigate("settings") },
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .background(Color.White)
+                        .border(1.dp, Color.LightGray, CircleShape)
+                        .size(40.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Ajustes",
+                        tint = Color.Black
                     )
                 }
+            }
 
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = "Configuración",
-                    tint = Color.Gray,
-                    modifier = Modifier
-                        .size(28.dp)
-                        .clickable {
-                            navController.navigate("settings")
-                        }
+            // Bienvenida
+            Text(
+                text = "Bienvenido\n(${user.name.value})",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                color = TextColor,
+                fontFamily = FontFamily.SansSerif
+            )
+
+            Text(
+                text = "¿Qué quieres comprar hoy?",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color = TextColor,
+                fontFamily = FontFamily.SansSerif
+            )
+
+            // Botón crear lista
+            Button(
+                onClick = { navController.navigate("create-list") },
+                colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary),
+                shape = RoundedCornerShape(24.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+            ) {
+                Text("CREAR LISTA", color = Color.White, fontFamily = FontFamily.SansSerif)
+            }
+
+            // Título listas con línea al lado
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Mis Listas",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = TextColor,
+                    fontFamily = FontFamily.SansSerif
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Divider(
+                    color = Color.LightGray,
+                    thickness = 1.dp,
+                    modifier = Modifier.weight(1f)
                 )
             }
 
-            // Botón de nueva lista
-            Button(
-                onClick = { navController.navigate("create-list") },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7EECA5)),
-                modifier = Modifier.align(Alignment.Start)
-            ) {
-                Text("Crear nueva lista", color = Color.White)
-            }
-
-            // Título de listas
-            Text(
-                text = "Mis listas",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF2ECC71)
-            )
-
-            // Mostrar errores o estado
             if (messageError.isNotEmpty()) {
                 Text(text = messageError, color = Color.Red)
             }
 
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxSize()
+            ) {
                 if (items.isEmpty()) {
                     item {
                         Text(chargeMessage)
@@ -109,39 +143,53 @@ fun Menu(navController: NavController, user: User, db: Database, viewmodel: View
                 } else {
                     items(items) { elemento ->
                         Card(
+                            shape = RoundedCornerShape(16.dp),
+                            colors = CardDefaults.cardColors(containerColor = GreenSecondary),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
                                     viewlist.ModifyList(elemento)
                                     navController.navigate("view-list")
-                                },
-                            colors = CardDefaults.cardColors(containerColor = Color(0xFFEEFCF5))
+                                }
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
-                                Text(
-                                    text = elemento.name,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 18.sp,
-                                    color = Color(0xFF2ECC71)
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    Column {
-                                        Text("Para: ${elemento.date}")
-                                        Text("Objetos: ${elemento.products.size}")
-                                    }
+                                    Text(
+                                        text = elemento.name,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 16.sp,
+                                        color = TextColor
+                                    )
                                     Column(horizontalAlignment = Alignment.End) {
-                                        Text("Completado:")
                                         Text(
-                                            "${elemento.completion}%",
-                                            color = Color(0xFF2ECC71),
-                                            fontWeight = FontWeight.Bold
+                                            text = "Completado:",
+                                            fontSize = 12.sp,
+                                            color = TextColor
+                                        )
+                                        Text(
+                                            text = "${elemento.completion}%",
+                                            fontWeight = FontWeight.Bold,
+                                            color = TextColor,
+                                            fontSize = 14.sp
                                         )
                                     }
                                 }
+
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                Text(
+                                    text = "Para: ${elemento.date}",
+                                    fontSize = 13.sp,
+                                    color = TextColor
+                                )
+                                Text(
+                                    text = "Objetos: ${elemento.products.size}",
+                                    fontSize = 13.sp,
+                                    color = TextColor
+                                )
                             }
                         }
                     }
@@ -150,6 +198,7 @@ fun Menu(navController: NavController, user: User, db: Database, viewmodel: View
         }
     }
 }
+
 
 
 
