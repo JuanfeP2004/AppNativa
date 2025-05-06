@@ -3,75 +3,125 @@ package com.xacarana.milistademercado.screens
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.xacarana.milistademercado.R
-import com.xacarana.milistademercado.authenticator
 import com.xacarana.milistademercado.functions.Auth
 import com.xacarana.milistademercado.models.User
-import kotlinx.coroutines.coroutineScope
+import com.xacarana.milistademercado.ui.theme.ScreenPadding
 import kotlinx.coroutines.launch
-import java.net.Authenticator
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Login(navController: NavController, user: User, authenticator: Auth) {
-
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var messageError by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
 
-    Surface() {
-        Column {
+    Surface(
+        modifier = Modifier
+            .fillMaxSize(),
+        color = Color.White
+    ) {
+        Column(
+            modifier = ScreenPadding.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.auth_image),
-                contentDescription = "Imagen del Registro",
-                contentScale = ContentScale.Fit
+                contentDescription = "Imagen de inicio",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(180.dp)
             )
-            Text("MI LISTA DE MERCADO")
 
-            Text("INICIAR SESION")
+            Spacer(modifier = Modifier.height(8.dp))
 
-            Text("INGRESA TU EMAIL")
-            TextField(value = email, onValueChange = { email = it })
+            Text(
+                text = "Mi Lista de Mercado",
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF2ECC71)
+            )
 
-            Text("INGRESA TU CONTRASEÑA")
-            TextField(value = password, onValueChange = { password = it })
+            Spacer(modifier = Modifier.height(12.dp))
 
-            Text(messageError)
+            Text(
+                text = "Iniciar sesión",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.SemiBold
+            )
 
-            Button(onClick = {
-                messageError = ""
-                coroutineScope.launch {
-                    authenticator.iniciarSesion(
-                        email,
-                        password,
-                        user,
-                        { navController.navigate("menu") },
-                        { messageError = it }
-                    )
-                }
-            }) {
-                Text("Ingresar")
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Correo electrónico") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Contraseña") },
+                visualTransformation = PasswordVisualTransformation(),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            if (messageError.isNotEmpty()) {
+                Text(
+                    text = messageError,
+                    color = Color.Red,
+                    fontSize = 14.sp
+                )
             }
-            Button(onClick = {navController.navigate("register")}) {
-                Text("Crear usuario")
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = {
+                    messageError = ""
+                    coroutineScope.launch {
+                        authenticator.iniciarSesion(
+                            email,
+                            password,
+                            user,
+                            { navController.navigate("menu") },
+                            { messageError = it }
+                        )
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2ECC71)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Ingresar", color = Color.White)
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            TextButton(onClick = { navController.navigate("register") }) {
+                Text("Crear cuenta", color = Color(0xFF2ECC71))
             }
         }
     }
 }
+
