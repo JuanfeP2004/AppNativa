@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,15 +32,27 @@ fun ViewList(navController: NavController, list: ViewListModel, db: Database) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(horizontal = 32.dp, vertical = 24.dp),
+        color = Color(0xFFEFFEF7)
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(24.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Button(
                     onClick = { navController.navigate("menu") },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7EECA5))
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00B050)),
+                    shape = MaterialTheme.shapes.large,
+                    modifier = Modifier.weight(1f)
                 ) {
-                    Text("Regresar", color = Color.White)
+                    Text("REGRESAR", color = Color.White, fontSize = 16.sp)
                 }
                 Button(
                     onClick = {
@@ -50,43 +63,65 @@ fun ViewList(navController: NavController, list: ViewListModel, db: Database) {
                             {}
                         )
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00B050)),
+                    shape = MaterialTheme.shapes.large,
+                    modifier = Modifier.weight(1f)
                 ) {
-                    Text("Eliminar lista", color = Color.White)
+                    Text("ELIMINAR", color = Color.White, fontSize = 16.sp)
                 }
             }
 
-            OutlinedTextField(
-                value = list.list.value!!.name,
-                onValueChange = { _ -> },
-                readOnly = true,
-                label = { Text("Nombre de la lista") },
-                modifier = Modifier.fillMaxWidth()
+            Text(
+                text = list.list.value!!.name,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                textAlign = TextAlign.Center
             )
 
-            Text(text = "Descripción:", fontWeight = FontWeight.Bold)
-            OutlinedTextField(
-                value = list.list.value!!.description,
-                onValueChange = { _ -> },
-                readOnly = true,
-                modifier = Modifier.fillMaxWidth()
+            Divider(thickness = 1.dp, color = Color.Black.copy(alpha = 0.5f))
+
+            Text(
+                text = "Descripcion:",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                modifier = Modifier.align(Alignment.Start)
             )
 
-            Row {
-                Text("Fecha: ", fontWeight = FontWeight.Bold)
-                Text(list.list.value!!.date.toString())
+            Surface(
+                color = Color(0xFFDCE6D7),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .padding(horizontal = 4.dp)
+            ) {
+                Text(
+                    text = list.list.value!!.description,
+                    modifier = Modifier.padding(8.dp),
+                    fontSize = 16.sp
+                )
             }
 
             Text(
-                "Productos",
-                fontSize = 20.sp,
+                text = "Para: ${list.list.value!!.date}",
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF2ECC71)
+                fontSize = 16.sp,
+                modifier = Modifier.align(Alignment.Start)
             )
 
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(list.list.value!!.products) { product ->
-                    ProductListWidget(product, list.list.value!!)
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "Objetos",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
+                )
+                LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    items(list.list.value!!.products) { product ->
+                        ProductListWidget(product, list.list.value!!)
+                    }
                 }
             }
         }
@@ -103,7 +138,7 @@ fun ProductListWidget(product: Product, list: MarketList) {
             .padding(horizontal = 4.dp),
         colors = CardDefaults.cardColors(
             containerColor = when (check) {
-                "checked" -> Color(0xFFDEE9D8)
+                "checked" -> Color(0xFFB9EACB)
                 "deleted" -> Color(0xFFFFD6D6)
                 else -> Color.White
             }
@@ -129,13 +164,15 @@ fun ProductListWidget(product: Product, list: MarketList) {
                 )
                 Text(
                     text = "Unidades: ${product.amount}${product.und}",
-                    textDecoration = if (check != "none") TextDecoration.LineThrough else null
+                    textDecoration = if (check != "none") TextDecoration.LineThrough else null,
+                    fontSize = 14.sp
                 )
                 if (check != "none") {
                     Text(
                         text = if (check == "checked") "COMPRADO" else "ELIMINADO",
                         color = if (check == "checked") Color(0xFF2ECC71) else Color.Red,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp
                     )
                 }
             }
@@ -147,8 +184,7 @@ fun ProductListWidget(product: Product, list: MarketList) {
                             .clickable {
                                 check = "checked"
                                 firebase.modifyProduct(check, usuario, list, product)
-                                usuario.listas.value?.find { it.id == list.id }
-                                    ?.products?.find { it.id == product.id }?.check = check
+                                usuario.listas.value?.find { it.id == list.id }?.products?.find { it.id == product.id }?.check = check
                             }
                             .padding(4.dp),
                         imageVector = Icons.Default.CheckCircle,
@@ -160,8 +196,7 @@ fun ProductListWidget(product: Product, list: MarketList) {
                             .clickable {
                                 check = "deleted"
                                 firebase.modifyProduct(check, usuario, list, product)
-                                usuario.listas.value?.find { it.id == list.id }
-                                    ?.products?.find { it.id == product.id }?.check = check
+                                usuario.listas.value?.find { it.id == list.id }?.products?.find { it.id == product.id }?.check = check
                             }
                             .padding(4.dp),
                         imageVector = Icons.Default.Close,
@@ -173,3 +208,6 @@ fun ProductListWidget(product: Product, list: MarketList) {
         }
     }
 }
+
+
+
