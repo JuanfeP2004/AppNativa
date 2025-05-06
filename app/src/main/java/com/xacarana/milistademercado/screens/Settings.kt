@@ -1,6 +1,8 @@
 package com.xacarana.milistademercado.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -14,88 +16,115 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.xacarana.milistademercado.functions.Auth
 import com.xacarana.milistademercado.models.User
-import com.xacarana.milistademercado.ui.theme.ScreenPadding
 
 @Composable
 fun SettingsScreen(navController: NavController, user: User, authenticator: Auth) {
     var darkThemeEnabled by remember { mutableStateOf(false) }
 
+    val backgroundColor = if (darkThemeEnabled) Color(0xFF121212) else Color(0xFFF0FFF7)
+    val textColor = if (darkThemeEnabled) Color.White else Color.Black
+    val buttonColor = Color(0xFF00C853)
+
     Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        modifier = Modifier
+            .fillMaxSize()
+            .background(backgroundColor)
+            .padding(24.dp),
+        color = backgroundColor
     ) {
         Column(
-            modifier = ScreenPadding.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxSize()
         ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                // Encabezado
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp)
-                ) {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Regresar"
-                        )
-                    }
-                    Text(
-                        text = "Ajustes",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
+            // Botón de regreso y título
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Regresar",
+                        tint = textColor
                     )
                 }
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Ajustes",
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = textColor
+                )
+            }
 
-                Spacer(modifier = Modifier.height(16.dp))
+            // Botón modo oscuro
+            Button(
+                onClick = { darkThemeEnabled = !darkThemeEnabled },
+                colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
+                shape = RoundedCornerShape(50),
+                modifier = Modifier
+                    .fillMaxWidth(0.7f)
+                    .height(50.dp)
+            ) {
+                Text(
+                    text = "MODO OSCURO",
+                    fontSize = 16.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold
+                )
+            }
 
-                // Modo oscuro
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text("Modo oscuro", fontSize = 16.sp, modifier = Modifier.weight(1f))
-                    Switch(
-                        checked = darkThemeEnabled,
-                        onCheckedChange = { darkThemeEnabled = it }
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Cerrar sesión
-                Button(
-                    onClick = {
-                        authenticator.cerrarSesion(user) {
-                            navController.navigate("login") {
-                                popUpTo("menu") { inclusive = true }
-                            }
+            // Botón cerrar sesión
+            Button(
+                onClick = {
+                    authenticator.cerrarSesion(user) {
+                        navController.navigate("login") {
+                            popUpTo("menu") { inclusive = true }
                         }
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD6D6D6)),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("CERRAR SESIÓN", color = Color.Black)
-                }
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
+                shape = RoundedCornerShape(50),
+                modifier = Modifier
+                    .fillMaxWidth(0.7f)
+                    .height(50.dp)
+            ) {
+                Text(
+                    text = "CERRAR SESIÓN",
+                    fontSize = 16.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold
+                )
             }
 
             // Créditos
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Divider(color = Color.Gray, thickness = 1.dp)
-                Text("Créditos", fontWeight = FontWeight.Medium, fontSize = 16.sp)
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Divider(color = textColor.copy(alpha = 0.5f), thickness = 1.dp)
+                Text(
+                    text = "Créditos",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = textColor
+                )
+                Divider(color = textColor.copy(alpha = 0.5f), thickness = 1.dp)
                 Spacer(modifier = Modifier.height(8.dp))
-                Text("Juan Felipe Ramírez", fontSize = 14.sp)
-                Text("Nicolle Aguirre", fontSize = 14.sp)
-                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Juan Felipe Ramírez",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = textColor
+                )
+                Text(
+                    text = "Nicolle Aguirre",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = textColor
+                )
             }
         }
     }
 }
+
+
 
