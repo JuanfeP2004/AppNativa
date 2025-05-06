@@ -2,79 +2,91 @@ package com.xacarana.milistademercado.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.google.firebase.Firebase
-import com.xacarana.milistademercado.R
-import com.xacarana.milistademercado.firebase
 import com.xacarana.milistademercado.functions.Database
 import com.xacarana.milistademercado.models.MarketList
 import com.xacarana.milistademercado.models.Product
-import com.xacarana.milistademercado.models.User
 import com.xacarana.milistademercado.models.ViewListModel
 import com.xacarana.milistademercado.usuario
+import com.xacarana.milistademercado.firebase
 
 @Composable
-fun ViewList(navController: NavController, user: User, list: ViewListModel, db: Database){
-    Surface {
-        Column {
-            Row {
-                Button(onClick = { navController.navigate("menu") }) {
-                    Text("REGRESAR")
+fun ViewList(navController: NavController, list: ViewListModel, db: Database) {
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(
+                    onClick = { navController.navigate("menu") },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7EECA5))
+                ) {
+                    Text("Regresar", color = Color.White)
                 }
-                Button(onClick = {
-                    db.deleteList(
-                        user,
-                        list.list.value!!,
-                        { navController.navigate("menu")},
-                        {}
-                    )
-                }) {
-                    Text("ELIMINAR")
+                Button(
+                    onClick = {
+                        db.deleteList(
+                            usuario,
+                            list.list.value!!,
+                            { navController.navigate("menu") },
+                            {}
+                        )
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                ) {
+                    Text("Eliminar lista", color = Color.White)
                 }
             }
 
-            TextField(value = list.list.value!!.name, onValueChange = {}, readOnly = true)
+            OutlinedTextField(
+                value = list.list.value!!.name,
+                onValueChange = { _ -> },
+                readOnly = true,
+                label = { Text("Nombre de la lista") },
+                modifier = Modifier.fillMaxWidth()
+            )
 
-            Text("Descripción:")
-
-            TextField(value = list.list.value!!.description, onValueChange = {}, readOnly = true)
+            Text(text = "Descripción:", fontWeight = FontWeight.Bold)
+            OutlinedTextField(
+                value = list.list.value!!.description,
+                onValueChange = { _ -> },
+                readOnly = true,
+                modifier = Modifier.fillMaxWidth()
+            )
 
             Row {
-                Text("Fecha:")
+                Text("Fecha: ", fontWeight = FontWeight.Bold)
                 Text(list.list.value!!.date.toString())
             }
 
-            Box() {
-                Column {
-                    Text("Objetos")
-                    LazyColumn {
-                        items(list.list.value!!.products) {
-                            element -> ProductListWidget(element, list.list.value!!)
-                        }
-                    }
+            Text(
+                "Productos",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF2ECC71)
+            )
+
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                items(list.list.value!!.products) { product ->
+                    ProductListWidget(product, list.list.value!!)
                 }
             }
         }
@@ -83,47 +95,78 @@ fun ViewList(navController: NavController, user: User, list: ViewListModel, db: 
 
 @Composable
 fun ProductListWidget(product: Product, list: MarketList) {
-
     var check by remember { mutableStateOf(product.check) }
 
-    Box(){
-        Row {
-            Image(painter = painterResource(id = product.idProduct), contentDescription = product.name)
-            Column {
-                Text(
-                    product.name,
-                    textDecoration = if (check!="none") TextDecoration.LineThrough else null
-                )
-                Text(
-                    "Unidades: ${product.amount}${product.und}",
-                    textDecoration = if (check!="none") TextDecoration.LineThrough else null
-                )
-                if (check != "none")
-                    Text(if(check == "checked")"COMPRADO" else "ELIMINADO")
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = when (check) {
+                "checked" -> Color(0xFFDEE9D8)
+                "deleted" -> Color(0xFFFFD6D6)
+                else -> Color.White
             }
-            Column {
-                if(check == "none") {
+        )
+    ) {
+        Row(
+            modifier = Modifier.padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = product.idProduct),
+                contentDescription = product.name,
+                modifier = Modifier.size(64.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = product.name,
+                    textDecoration = if (check != "none") TextDecoration.LineThrough else null,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+                Text(
+                    text = "Unidades: ${product.amount}${product.und}",
+                    textDecoration = if (check != "none") TextDecoration.LineThrough else null
+                )
+                if (check != "none") {
+                    Text(
+                        text = if (check == "checked") "COMPRADO" else "ELIMINADO",
+                        color = if (check == "checked") Color(0xFF2ECC71) else Color.Red,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
+            if (check == "none") {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(
-                        modifier = Modifier.clickable(onClick = {
-                            check = "checked"
-                            firebase.modifyProduct(check, usuario, list, product)
-                            usuario.listas.value?.find { it.id == list.id }?.products?.find {
-                                it.id == product.id
-                            }?.check = check
-                        }),
+                        modifier = Modifier
+                            .clickable {
+                                check = "checked"
+                                firebase.modifyProduct(check, usuario, list, product)
+                                usuario.listas.value?.find { it.id == list.id }
+                                    ?.products?.find { it.id == product.id }?.check = check
+                            }
+                            .padding(4.dp),
                         imageVector = Icons.Default.CheckCircle,
-                        contentDescription = "delete"
+                        contentDescription = "Marcar como comprado",
+                        tint = Color(0xFF2ECC71)
                     )
                     Icon(
-                        modifier = Modifier.clickable(onClick = {
-                            check = "deleted"
-                            firebase.modifyProduct(check, usuario, list, product)
-                            usuario.listas.value?.find { it.id == list.id }?.products?.find {
-                                it.id == product.id
-                            }?.check = check
-                        }),
+                        modifier = Modifier
+                            .clickable {
+                                check = "deleted"
+                                firebase.modifyProduct(check, usuario, list, product)
+                                usuario.listas.value?.find { it.id == list.id }
+                                    ?.products?.find { it.id == product.id }?.check = check
+                            }
+                            .padding(4.dp),
                         imageVector = Icons.Default.Close,
-                        contentDescription = "delete"
+                        contentDescription = "Eliminar producto",
+                        tint = Color.Red
                     )
                 }
             }

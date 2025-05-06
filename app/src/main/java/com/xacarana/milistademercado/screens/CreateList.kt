@@ -1,51 +1,36 @@
 package com.xacarana.milistademercado.screens
 
-import android.icu.util.Calendar
 import android.app.DatePickerDialog
+import android.icu.util.Calendar
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Button
-import androidx.compose.material3.DatePicker
-//import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.xacarana.milistademercado.R
-import com.xacarana.milistademercado.models.MarketList
-import com.xacarana.milistademercado.models.User
-import java.sql.Date
-import java.time.LocalDate
-import androidx.compose.foundation.lazy.items
-import androidx.compose.runtime.rememberCoroutineScope
 import com.xacarana.milistademercado.functions.Database
 import com.xacarana.milistademercado.models.CreateListModel
+import com.xacarana.milistademercado.models.MarketList
 import com.xacarana.milistademercado.models.Product
+import com.xacarana.milistademercado.models.User
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,113 +40,143 @@ fun CreateList(
     user: User,
     db: Database,
     list: MutableList<Product>,
-    createlist: CreateListModel) {
-
-    var fecha by remember { mutableStateOf<LocalDate?>(createlist.list.value?.date!!) }
+    createlist: CreateListModel
+) {
+    var fecha by remember { mutableStateOf(createlist.list.value?.date!!) }
     var name by remember { mutableStateOf(createlist.list.value?.name!!) }
     var description by remember { mutableStateOf(createlist.list.value?.description!!) }
     var lista = remember { mutableStateListOf(*list.toTypedArray()) }
     var messageError by remember { mutableStateOf("") }
-
     val coroutineScope = rememberCoroutineScope()
 
-    val objectlista: MarketList = MarketList(
+    val objectlista = MarketList(
         id = "",
         name = name,
         description = description,
-        date = fecha!!,
+        date = fecha,
         completion = 0.0f,
         products = list
     )
 
-    Column {
-
-        Row {
-            Button(onClick = {
-                list.clear()
-                createlist.list.value?.name = ""
-                createlist.list.value?.description = ""
-                createlist.list.value?.date = LocalDate.now()
-                navController.navigate("menu")
-            }) {
-                Text("REGRESAR")
-            }
-            Button(onClick = {
-
-                val check = ValidateList(objectlista)
-
-                if(check == "") {
-                    messageError = ""
-
-                    db.createList(
-                        objectlista,
-                        user,
-                        {
-                            list.clear()
-
-                            createlist.list.value?.name = ""
-                            createlist.list.value?.description = ""
-                            createlist.list.value?.date = LocalDate.now()
-
-                            navController.navigate("menu")
-                        },
-                        { messageError = it }
-                    )
-
-
-                }
-                else
-                    messageError = check
-            }) {
-                Text("CREAR")
-            }
-        }
-
-        TextField(value = name, onValueChange = {
-            name = it
-            objectlista.name = name
-            createlist.list.value?.name = name!!
-        })
-
-        Text("Descripción:")
-        TextField(value = description, onValueChange = {
-            description = it
-            objectlista.description
-            createlist.list.value?.description = description!!
-        })
-
-        Row {
-            Text("Fecha")
-            DateTime(fechaSeleccionada = fecha, onFechaSeleccionada = {
-                objectlista.date = fecha!!
-                fecha = it
-                createlist.list.value?.date = fecha!!
-            })
-        }
-
-        Text(messageError)
-
-        Box() {
-            Column {
-
-                Text("Objetos")
-                Button(onClick = {
-                    navController.navigate("create-product")
-                }) {
-                    Text("AGREGAR")
-                }
-                LazyColumn {
-                    items(lista) { elemento ->
-                        ProductWidget(
-                            elemento = elemento,
-                            onDelete = {
-                                list.remove(elemento)
-                                lista.remove(elemento)
-                                objectlista.products == list
-                                //createlist.ModifyList(objectlista as MarketListTrack)
-                            })
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .background(Color(0xFFF6FFFA))
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Button(
+                onClick = {
+                    list.clear()
+                    createlist.list.value?.apply {
+                        name = ""
+                        description = ""
+                        date = LocalDate.now()
                     }
+                    navController.navigate("menu")
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB1F4D8))
+            ) {
+                Text("← Regresar", color = Color.Black)
+            }
 
+            Button(
+                onClick = {
+                    val check = ValidateList(objectlista)
+                    if (check.isEmpty()) {
+                        messageError = ""
+                        db.createList(objectlista, user, {
+                            list.clear()
+                            createlist.list.value?.apply {
+                                name = ""
+                                description = ""
+                                date = LocalDate.now()
+                            }
+                            navController.navigate("menu")
+                        }, { messageError = it })
+                    } else {
+                        messageError = check
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7EECA5))
+            ) {
+                Text("Crear lista", color = Color.White)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        OutlinedTextField(
+            label = { Text("Nombre de la lista") },
+            value = name,
+            onValueChange = {
+                name = it
+                objectlista.name = it
+                createlist.list.value?.name = it
+            },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedTextField(
+            label = { Text("Descripción") },
+            value = description,
+            onValueChange = {
+                description = it
+                objectlista.description = it
+                createlist.list.value?.description = it
+            },
+            modifier = Modifier.fillMaxWidth(),
+            maxLines = 3
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        DateTime(
+            fechaSeleccionada = fecha,
+            onFechaSeleccionada = {
+                fecha = it
+                objectlista.date = it
+                createlist.list.value?.date = it
+            }
+        )
+
+        if (messageError.isNotBlank()) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(messageError, color = MaterialTheme.colorScheme.error)
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(
+            text = "Productos agregados",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF2ECC71)
+        )
+
+        Button(
+            modifier = Modifier
+                .padding(vertical = 12.dp)
+                .fillMaxWidth(),
+            onClick = { navController.navigate("create-product") },
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF76D7C4))
+        ) {
+            Text("Agregar producto", color = Color.White)
+        }
+
+        LazyColumn {
+            items(lista) { producto ->
+                ProductWidget(producto) {
+                    list.remove(producto)
+                    lista.remove(producto)
+                    objectlista.products = list
                 }
             }
         }
@@ -180,20 +195,15 @@ fun DateTime(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                val calendario = Calendar.getInstance()
-                val year = calendario.get(Calendar.YEAR)
-                val month = calendario.get(Calendar.MONTH)
-                val day = calendario.get(Calendar.DAY_OF_MONTH)
-
+                val calendar = Calendar.getInstance()
                 DatePickerDialog(
                     contexto,
-                    { _, anio, mes, dia ->
-                        val fecha = LocalDate.of(anio, mes + 1, dia)
-                        onFechaSeleccionada(fecha)
+                    { _, year, month, day ->
+                        onFechaSeleccionada(LocalDate.of(year, month + 1, day))
                     },
-                    year,
-                    month,
-                    day
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
                 ).show()
             }
     ) {
@@ -202,41 +212,55 @@ fun DateTime(
             onValueChange = {},
             label = { Text("Seleccionar fecha") },
             readOnly = true,
-            enabled = false, // bloquea el input para evitar que el usuario intente escribir
-            modifier = Modifier
-                .fillMaxWidth()
+            enabled = false,
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
 
 @Composable
-fun ProductWidget(elemento: Product, onDelete: () -> Unit) {
-    Box() {
-        Row {
-            Image(
-                painter = painterResource(id = elemento.idProduct),
-                contentDescription = elemento.name
-            )
-            Column {
-                Text(elemento.name)
-                Text("Unidades: ${elemento.amount}${elemento.und}")
+fun ProductWidget(product: Product, onDelete: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFEEFCF5))
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = painterResource(id = product.idProduct),
+                    contentDescription = product.name,
+                    modifier = Modifier.size(60.dp)
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Column {
+                    Text(product.name, fontWeight = FontWeight.Bold)
+                    Text("Unidades: ${product.amount} ${product.und}")
+                }
             }
             Icon(
-                modifier = Modifier.clickable(onClick = {
-                    onDelete()
-                }),
                 imageVector = Icons.Default.Delete,
-                contentDescription = "delete"
+                contentDescription = "Eliminar",
+                tint = Color.Red,
+                modifier = Modifier
+                    .clickable { onDelete() }
+                    .padding(8.dp)
             )
         }
     }
 }
 
-
 @RequiresApi(Build.VERSION_CODES.O)
 fun ValidateList(list: MarketList): String {
-    if (list.name == "" || list.name.isNullOrBlank()) return "El nombre no puede estar en blanco"
-    if (list.date.isBefore(LocalDate.now())) return "La fecha no puede ser anterior a la actual"
-    if (list.products.count() == 0) return "La lista de productos no puede estar vacia"
+    if (list.name.isBlank()) return "El nombre no puede estar en blanco"
+    if (list.date.isBefore(LocalDate.now())) return "La fecha no puede ser anterior a hoy"
+    if (list.products.isEmpty()) return "La lista no puede estar vacía"
     return ""
 }
+
