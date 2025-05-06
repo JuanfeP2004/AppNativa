@@ -44,7 +44,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.rememberCoroutineScope
 import com.xacarana.milistademercado.functions.Database
 import com.xacarana.milistademercado.models.CreateListModel
-import com.xacarana.milistademercado.models.MarketListTrack
 import com.xacarana.milistademercado.models.Product
 import kotlinx.coroutines.launch
 
