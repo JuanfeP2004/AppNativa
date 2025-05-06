@@ -10,7 +10,7 @@ val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
+        fontSize = 18.sp,
         color = TextColor
     ),
     headlineLarge = TextStyle(
@@ -22,7 +22,7 @@ val Typography = Typography(
     labelLarge = TextStyle(
         fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.Medium,
-        fontSize = 14.sp,
+        fontSize = 20.sp,
         color = TextColor
     )
 )

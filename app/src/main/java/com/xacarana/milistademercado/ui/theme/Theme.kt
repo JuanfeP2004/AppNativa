@@ -34,7 +34,7 @@ fun MiListaDeMercadoTheme(
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = LightColorScheme // For now, we're locking the theme to light.
+    val colorScheme = LightColorScheme
 
     MaterialTheme(
         colorScheme = colorScheme,

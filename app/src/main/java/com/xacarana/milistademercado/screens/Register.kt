@@ -3,6 +3,7 @@ package com.xacarana.milistademercado.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -17,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.xacarana.milistademercado.R
 import com.xacarana.milistademercado.functions.Auth
-import com.xacarana.milistademercado.ui.theme.ScreenPadding // <-- IMPORTANTE
+import com.xacarana.milistademercado.ui.theme.*
 
 @Composable
 fun Register(navController: NavController, authenticator: Auth) {
@@ -30,14 +31,15 @@ fun Register(navController: NavController, authenticator: Auth) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFEEFCF5))
+            .background(BackgroundLight)
     ) {
         Column(
-            modifier = ScreenPadding.fillMaxSize(),
+            modifier = ScreenPadding
+                .fillMaxSize()
+                .padding(top = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Spacer(modifier = Modifier.height(20.dp))
 
             Image(
                 painter = painterResource(id = R.drawable.auth_image),
@@ -48,42 +50,53 @@ fun Register(navController: NavController, authenticator: Auth) {
             )
 
             Text(
-                text = "MI LISTA DE MERCADO",
-                color = Color(0xFF2ECC71),
-                fontSize = 24.sp
+                text = "LISTA DIGITAL",
+                style = MaterialTheme.typography.headlineLarge,
+                color = GreenPrimary
             )
 
-            Text(text = "¡Bienvenido!", color = Color(0xFF262626), fontSize = 18.sp)
+            Text(
+                text = "¡Bienvenido!",
+                style = MaterialTheme.typography.bodyLarge,
+                color = TextColor
+            )
 
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("Nombre") },
+                label = { Text("Ingresa tu nombre:", style = MaterialTheme.typography.labelLarge) },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp)
             )
 
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Correo electrónico") },
+                label = { Text("Ingresa tu correo:", style = MaterialTheme.typography.labelLarge) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp)
             )
 
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Contraseña") },
+                label = { Text("Ingresa tu contraseña:", style = MaterialTheme.typography.labelLarge) },
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp)
             )
 
             if (messageError.isNotEmpty()) {
-                Text(text = messageError, color = Color.Red)
+                Text(
+                    text = messageError,
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyLarge
+                )
             }
 
             Button(
@@ -97,16 +110,27 @@ fun Register(navController: NavController, authenticator: Auth) {
                         { messageError = it }
                     )
                 },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2ECC71))
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary),
+                shape = RoundedCornerShape(50)
             ) {
-                Text("Registrarse", color = Color.White)
+                Text("REGISTRARSE", color = Color.White, style = MaterialTheme.typography.labelLarge)
             }
 
-            TextButton(onClick = { navController.navigate("login") }) {
-                Text("Ya tengo una cuenta", color = Color(0xFF262626))
+            Button(
+                onClick = { navController.navigate("login") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = GreenSecondary),
+                shape = RoundedCornerShape(50)
+            ) {
+                Text("YA TENGO UN USUARIO", color = TextColor, style = MaterialTheme.typography.labelLarge)
             }
         }
     }
 }
+
 

@@ -3,7 +3,9 @@ package com.xacarana.milistademercado.screens
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -11,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -19,7 +23,9 @@ import androidx.navigation.NavController
 import com.xacarana.milistademercado.R
 import com.xacarana.milistademercado.functions.Auth
 import com.xacarana.milistademercado.models.User
-import com.xacarana.milistademercado.ui.theme.ScreenPadding
+import com.xacarana.milistademercado.ui.theme.BackgroundLight
+import com.xacarana.milistademercado.ui.theme.GreenPrimary
+import com.xacarana.milistademercado.ui.theme.TextColor
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -32,70 +38,111 @@ fun Login(navController: NavController, user: User, authenticator: Auth) {
 
     Surface(
         modifier = Modifier
-            .fillMaxSize(),
-        color = Color.White
+            .fillMaxSize()
+            .background(BackgroundLight)
     ) {
         Column(
-            modifier = ScreenPadding.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
+            verticalArrangement = Arrangement.Center
         ) {
             Image(
                 painter = painterResource(id = R.drawable.auth_image),
                 contentDescription = "Imagen de inicio",
-                contentScale = ContentScale.Fit,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(180.dp)
             )
 
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(
+                text = "LISTA DIGITAL",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                color = TextColor,
+                fontFamily = FontFamily.SansSerif
+            )
+
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Mi Lista de Mercado",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF2ECC71)
+                text = "Inicio de sesion",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = TextColor,
+                fontFamily = FontFamily.SansSerif
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = "Iniciar sesión",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.SemiBold
+                text = "Ingresa tu nombre:",
+                fontSize = 14.sp,
+                color = TextColor,
+                fontFamily = FontFamily.SansSerif
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Correo electrónico") },
-                modifier = Modifier.fillMaxWidth()
+                singleLine = true,
+                textStyle = TextStyle(fontFamily = FontFamily.SansSerif),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                shape = RoundedCornerShape(8.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = GreenPrimary,
+                    unfocusedBorderColor = Color.Gray,
+                    cursorColor = GreenPrimary
+                )
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            Text(
+                text = "Ingresa tu contraseña:",
+                fontSize = 14.sp,
+                color = TextColor,
+                fontFamily = FontFamily.SansSerif
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Contraseña") },
+                singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth()
+                textStyle = TextStyle(fontFamily = FontFamily.SansSerif),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                shape = RoundedCornerShape(8.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = GreenPrimary,
+                    unfocusedBorderColor = Color.Gray,
+                    cursorColor = GreenPrimary
+                )
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
-
             if (messageError.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = messageError,
                     color = Color.Red,
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
+                    fontFamily = FontFamily.SansSerif
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             Button(
                 onClick = {
@@ -110,18 +157,29 @@ fun Login(navController: NavController, user: User, authenticator: Auth) {
                         )
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2ECC71)),
-                modifier = Modifier.fillMaxWidth()
+                colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary),
+                shape = RoundedCornerShape(24.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
             ) {
-                Text("Ingresar", color = Color.White)
+                Text("INGRESAR", fontFamily = FontFamily.SansSerif, color = Color.White)
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
-            TextButton(onClick = { navController.navigate("register") }) {
-                Text("Crear cuenta", color = Color(0xFF2ECC71))
+            Button(
+                onClick = { navController.navigate("register") },
+                colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary),
+                shape = RoundedCornerShape(24.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+            ) {
+                Text("REGISTRARSE", fontFamily = FontFamily.SansSerif, color = Color.White)
             }
         }
     }
 }
+
 
