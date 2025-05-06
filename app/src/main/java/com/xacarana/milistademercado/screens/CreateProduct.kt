@@ -59,7 +59,7 @@ fun CreateProduct(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
-            text = "Crear Producto",
+            text = "Agregar Producto",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = GreenPrimary
@@ -93,7 +93,7 @@ fun CreateProduct(
                     .weight(1f)
                     .height(50.dp)
             ) {
-                Text("Crear", color = Color.White)
+                Text("Agregar", color = Color.White)
             }
         }
 
