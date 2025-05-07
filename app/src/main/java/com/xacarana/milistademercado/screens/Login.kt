@@ -40,7 +40,7 @@ fun Login(navController: NavController, user: User, authenticator: Auth, Theme: 
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(BackgroundLight)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Column(
             modifier = Modifier
@@ -64,7 +64,7 @@ fun Login(navController: NavController, user: User, authenticator: Auth, Theme: 
                 text = "LISTA DIGITAL",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
-                color = TextColor,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontFamily = FontFamily.SansSerif
             )
 
@@ -74,7 +74,7 @@ fun Login(navController: NavController, user: User, authenticator: Auth, Theme: 
                 text = "Inicio de sesión",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = TextColor,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontFamily = FontFamily.SansSerif
             )
 
@@ -83,7 +83,7 @@ fun Login(navController: NavController, user: User, authenticator: Auth, Theme: 
             Text(
                 text = "Ingresa tu correo:",
                 fontSize = 20.sp,
-                color = TextColor,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontFamily = FontFamily.SansSerif
             )
 
@@ -96,7 +96,7 @@ fun Login(navController: NavController, user: User, authenticator: Auth, Theme: 
                 textStyle = TextStyle(fontFamily = FontFamily.SansSerif),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
+                    .height(50.dp).background(MaterialTheme.colorScheme.background),
                 shape = RoundedCornerShape(8.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = GreenPrimary,
@@ -110,7 +110,7 @@ fun Login(navController: NavController, user: User, authenticator: Auth, Theme: 
             Text(
                 text = "Ingresa tu contraseña:",
                 fontSize = 18.sp,
-                color = TextColor,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontFamily = FontFamily.SansSerif
             )
 
@@ -124,7 +124,7 @@ fun Login(navController: NavController, user: User, authenticator: Auth, Theme: 
                 textStyle = TextStyle(fontFamily = FontFamily.SansSerif),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp),
+                    .height(50.dp).background(MaterialTheme.colorScheme.background),
                 shape = RoundedCornerShape(8.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = GreenPrimary,
@@ -158,26 +158,26 @@ fun Login(navController: NavController, user: User, authenticator: Auth, Theme: 
                         )
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 shape = RoundedCornerShape(24.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
             ) {
-                Text("INGRESAR", fontFamily = FontFamily.SansSerif, color = Color.White)
+                Text("INGRESAR", fontFamily = FontFamily.SansSerif, color = MaterialTheme.colorScheme.onSurface)
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
             Button(
                 onClick = { navController.navigate("register") },
-                colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 shape = RoundedCornerShape(24.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
             ) {
-                Text("REGISTRARSE", fontFamily = FontFamily.SansSerif, color = Color.White)
+                Text("REGISTRARSE", fontFamily = FontFamily.SansSerif, color = MaterialTheme.colorScheme.onSurface)
             }
         }
     }

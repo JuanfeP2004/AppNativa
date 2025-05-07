@@ -50,7 +50,7 @@ fun Menu(navController: NavController, user: User, db: Database, viewmodel: View
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(BackgroundLight)
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 24.dp)
     ) {
         Column(
@@ -68,7 +68,7 @@ fun Menu(navController: NavController, user: User, db: Database, viewmodel: View
                     onClick = { navController.navigate("settings") },
                     modifier = Modifier
                         .clip(CircleShape)
-                        .background(Color.White)
+                        .background(MaterialTheme.colorScheme.background)
                         .border(1.dp, Color.LightGray, CircleShape)
                         .size(40.dp)
                 ) {
@@ -85,7 +85,7 @@ fun Menu(navController: NavController, user: User, db: Database, viewmodel: View
                 text = "Bienvenido\n(${user.name.value})",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
-                color = TextColor,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontFamily = FontFamily.SansSerif
             )
 
@@ -93,20 +93,20 @@ fun Menu(navController: NavController, user: User, db: Database, viewmodel: View
                 text = "¿Qué quieres comprar hoy?",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
-                color = TextColor,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontFamily = FontFamily.SansSerif
             )
 
             // Botón crear lista
             Button(
                 onClick = { navController.navigate("create-list") },
-                colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 shape = RoundedCornerShape(24.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
             ) {
-                Text("CREAR LISTA", color = Color.White, fontFamily = FontFamily.SansSerif)
+                Text("CREAR LISTA", color = MaterialTheme.colorScheme.onSurface, fontFamily = FontFamily.SansSerif)
             }
 
             // Título listas con línea al lado
@@ -118,7 +118,7 @@ fun Menu(navController: NavController, user: User, db: Database, viewmodel: View
                     text = "Mis Listas",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = TextColor,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontFamily = FontFamily.SansSerif
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -139,13 +139,13 @@ fun Menu(navController: NavController, user: User, db: Database, viewmodel: View
             ) {
                 if (items.isEmpty()) {
                     item {
-                        Text(chargeMessage)
+                        Text(chargeMessage, color = MaterialTheme.colorScheme.onSurface)
                     }
                 } else {
                     items(items) { elemento ->
                         Card(
                             shape = RoundedCornerShape(16.dp),
-                            colors = CardDefaults.cardColors(containerColor = GreenSecondary),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
@@ -162,18 +162,18 @@ fun Menu(navController: NavController, user: User, db: Database, viewmodel: View
                                         text = elemento.name,
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 16.sp,
-                                        color = TextColor
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                     Column(horizontalAlignment = Alignment.End) {
                                         Text(
                                             text = "Completado:",
                                             fontSize = 12.sp,
-                                            color = TextColor
+                                            color = MaterialTheme.colorScheme.onSurface
                                         )
                                         Text(
                                             text = "${elemento.completion}%",
                                             fontWeight = FontWeight.Bold,
-                                            color = TextColor,
+                                            color = MaterialTheme.colorScheme.onSurface,
                                             fontSize = 14.sp
                                         )
                                     }
@@ -184,12 +184,12 @@ fun Menu(navController: NavController, user: User, db: Database, viewmodel: View
                                 Text(
                                     text = "Para: ${elemento.date}",
                                     fontSize = 13.sp,
-                                    color = TextColor
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
                                     text = "Objetos: ${elemento.products.size}",
                                     fontSize = 13.sp,
-                                    color = TextColor
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
                         }

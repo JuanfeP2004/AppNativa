@@ -29,9 +29,8 @@ fun SettingsScreen(navController: NavController, user: User, authenticator: Auth
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundColor)
+            .background(MaterialTheme.colorScheme.background)
             .padding(24.dp),
-        color = MaterialTheme.colorScheme.background
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -47,7 +46,7 @@ fun SettingsScreen(navController: NavController, user: User, authenticator: Auth
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Regresar",
-                        tint = textColor
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
                 Spacer(modifier = Modifier.width(8.dp))
@@ -55,14 +54,14 @@ fun SettingsScreen(navController: NavController, user: User, authenticator: Auth
                     text = "Ajustes",
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
-                    color = textColor
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
 
             // Botón modo oscuro
             Button(
                 onClick = { Theme.toggleTheme() },
-                colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 shape = RoundedCornerShape(50),
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
@@ -71,7 +70,7 @@ fun SettingsScreen(navController: NavController, user: User, authenticator: Auth
                 Text(
                     text = "MODO OSCURO",
                     fontSize = 16.sp,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -85,7 +84,7 @@ fun SettingsScreen(navController: NavController, user: User, authenticator: Auth
                         }
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 shape = RoundedCornerShape(50),
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
@@ -94,7 +93,7 @@ fun SettingsScreen(navController: NavController, user: User, authenticator: Auth
                 Text(
                     text = "CERRAR SESIÓN",
                     fontSize = 16.sp,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -106,7 +105,7 @@ fun SettingsScreen(navController: NavController, user: User, authenticator: Auth
                     text = "Créditos",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Medium,
-                    color = textColor
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Divider(color = textColor.copy(alpha = 0.5f), thickness = 1.dp)
                 Spacer(modifier = Modifier.height(8.dp))
@@ -114,13 +113,13 @@ fun SettingsScreen(navController: NavController, user: User, authenticator: Auth
                     text = "Juan Felipe Ramírez",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = textColor
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = "Nicolle Aguirre",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = textColor
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
         }

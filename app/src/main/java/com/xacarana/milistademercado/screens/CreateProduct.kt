@@ -37,6 +37,7 @@ fun CreateProduct(
     val opciones = listOf("und", "kg", "lbs", "lts", "cm")
     var seleccion by remember { mutableStateOf("und") }
     var errorMessage by remember { mutableStateOf("") }
+    //var productSelect by remember { mutable}
 
     var product by remember {
         mutableStateOf(
@@ -54,6 +55,12 @@ fun CreateProduct(
     var name = remember { mutableStateOf(product.name) }
     var amount by remember { mutableFloatStateOf(product.amount) }
 
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 32.dp, vertical = 24.dp)
+            .background(MaterialTheme.colorScheme.background)
+    ){
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -64,7 +71,7 @@ fun CreateProduct(
             text = "Agregar Producto",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            color = GreenPrimary
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         Row(
@@ -73,12 +80,12 @@ fun CreateProduct(
         ) {
             Button(
                 onClick = { navController.navigate("create-list") },
-                colors = ButtonDefaults.buttonColors(containerColor = GreenSecondary),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 modifier = Modifier
                     .weight(1f)
                     .height(50.dp)
             ) {
-                Text("Regresar", color = Color.White)
+                Text("Regresar", color = MaterialTheme.colorScheme.onSurface)
             }
             Button(
                 onClick = {
@@ -90,12 +97,12 @@ fun CreateProduct(
                         errorMessage = "Completa todos los campos correctamente"
                     }
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 modifier = Modifier
                     .weight(1f)
                     .height(50.dp)
             ) {
-                Text("Agregar", color = Color.White)
+                Text("Agregar", color = MaterialTheme.colorScheme.onSurface)
             }
         }
 
@@ -106,7 +113,8 @@ fun CreateProduct(
         Text(
             text = "Producto: ${name.value}",
             fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         Row(
@@ -124,7 +132,7 @@ fun CreateProduct(
                         product.amount = newAmount
                     }
                 },
-                label = { Text("Cantidad") }
+                label = { Text("Cantidad", color = MaterialTheme.colorScheme.onSurface) }
             )
 
             Selector(
@@ -135,20 +143,21 @@ fun CreateProduct(
                     seleccion = it
                 },
                 product = product,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f).background(MaterialTheme.colorScheme.secondary)
             )
         }
 
         Text(
             text = "Selecciona una imagen:",
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxHeight(0.5f)
+            //modifier = Modifier.fillMaxHeight(0.5f)
         ) {
             item { ProductImageWidget("Tomate", R.drawable.tomate, product, name) }
             item { ProductImageWidget("Pollo", R.drawable.pollo, product, name) }
@@ -167,6 +176,7 @@ fun CreateProduct(
             item { ProductImageWidget("Queso", R.drawable.queso, product, name) }
         }
     }
+}
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -189,7 +199,7 @@ fun Selector(
             value = opcionSeleccionada,
             onValueChange = { },
             readOnly = true,
-            label = { Text("Unidad") },
+            label = { Text("Unidad", color = MaterialTheme.colorScheme.onSurface) },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded)
             },
@@ -202,7 +212,7 @@ fun Selector(
         ) {
             opciones.forEach { opcion ->
                 DropdownMenuItem(
-                    text = { Text(opcion) },
+                    text = { Text(opcion, color = MaterialTheme.colorScheme.onSurface) },
                     onClick = {
                         onOpcionSeleccionada(opcion)
                         product.und = opcion
@@ -230,7 +240,7 @@ fun ProductImageWidget(
                 product.name = name
                 nameState.value = name
             }
-            .background(if (isSelected) GreenSecondary.copy(alpha = 0.2f) else Color.Transparent)
+            .background(if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
             .padding(4.dp)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -240,7 +250,7 @@ fun ProductImageWidget(
             contentDescription = name,
             modifier = Modifier.size(64.dp)
         )
-        Text(text = name, fontSize = 14.sp)
+        Text(text = name, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
     }
 }
 

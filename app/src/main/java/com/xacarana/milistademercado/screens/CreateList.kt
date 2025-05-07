@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +31,7 @@ import com.xacarana.milistademercado.models.MarketList
 import com.xacarana.milistademercado.models.Product
 import com.xacarana.milistademercado.models.ThemeViewModel
 import com.xacarana.milistademercado.models.User
+import java.nio.file.WatchEvent
 import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -57,137 +59,171 @@ fun CreateList(
         completion = 0.0f,
         products = list
     )
-
-    Column(
+    Surface(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp)
-            .background(Color(0xFFF6FFFA))
+            .padding(horizontal = 32.dp, vertical = 24.dp)
+            .background(MaterialTheme.colorScheme.background)
     ) {
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxSize()
+                .padding(24.dp)
+                .background(MaterialTheme.colorScheme.background)
         ) {
-            Button(
-                onClick = {
-                    list.clear()
-                    createlist.list.value?.apply {
-                        name = ""
-                        description = ""
-                        date = LocalDate.now()
-                    }
-                    navController.navigate("menu")
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB1F4D8)),
-                shape = MaterialTheme.shapes.medium
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("← REGRESAR", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                Button(
+                    onClick = {
+                        list.clear()
+                        createlist.list.value?.apply {
+                            name = ""
+                            description = ""
+                            date = LocalDate.now()
+                        }
+                        navController.navigate("menu")
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Text(
+                        "← REGRESAR",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+
+                Button(
+                    onClick = {
+                        val check = ValidateList(objectlista)
+                        if (check.isEmpty()) {
+                            messageError = ""
+                            db.createList(objectlista, user, {
+                                list.clear()
+                                createlist.list.value?.apply {
+                                    name = ""
+                                    description = ""
+                                    date = LocalDate.now()
+                                }
+                                navController.navigate("menu")
+                            }, { messageError = it })
+                        } else {
+                            messageError = check
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Text(
+                        "CREAR",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             }
+
+            Text(
+                text = "Mi Lista",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(bottom = 16.dp)
+            )
+
+            OutlinedTextField(
+                label = {
+                    Text(
+                        "Nombre de la lista",
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                },
+                value = name,
+                onValueChange = {
+                    name = it
+                    objectlista.name = it
+                    createlist.list.value?.name = it
+                },
+                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.tertiary),
+                singleLine = true
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                label = {
+                    Text(
+                        "Descripción",
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                },
+                value = description,
+                onValueChange = {
+                    description = it
+                    objectlista.description = it
+                    createlist.list.value?.description = it
+                },
+                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.tertiary),
+                maxLines = 3
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            DateTime(
+                fechaSeleccionada = fecha,
+                onFechaSeleccionada = {
+                    fecha = it
+                    objectlista.date = it
+                    createlist.list.value?.date = it
+                }
+            )
+
+            if (messageError.isNotBlank()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(messageError, color = MaterialTheme.colorScheme.error)
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "Objetos",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
 
             Button(
-                onClick = {
-                    val check = ValidateList(objectlista)
-                    if (check.isEmpty()) {
-                        messageError = ""
-                        db.createList(objectlista, user, {
-                            list.clear()
-                            createlist.list.value?.apply {
-                                name = ""
-                                description = ""
-                                date = LocalDate.now()
-                            }
-                            navController.navigate("menu")
-                        }, { messageError = it })
-                    } else {
-                        messageError = check
-                    }
-                },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2ECC71)),
-                shape = MaterialTheme.shapes.medium
+                modifier = Modifier
+                    .padding(vertical = 16.dp)
+                    .fillMaxWidth(),
+                onClick = { navController.navigate("create-product") },
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
-                Text("CREAR", fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+                Text(
+                    "AGREGAR",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             }
-        }
 
-        Text(
-            text = "Mi Lista",
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(bottom = 16.dp)
-        )
-
-        OutlinedTextField(
-            label = { Text("Nombre de la lista", fontSize = 14.sp) },
-            value = name,
-            onValueChange = {
-                name = it
-                objectlista.name = it
-                createlist.list.value?.name = it
-            },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            label = { Text("Descripción", fontSize = 14.sp) },
-            value = description,
-            onValueChange = {
-                description = it
-                objectlista.description = it
-                createlist.list.value?.description = it
-            },
-            modifier = Modifier.fillMaxWidth(),
-            maxLines = 3
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        DateTime(
-            fechaSeleccionada = fecha,
-            onFechaSeleccionada = {
-                fecha = it
-                objectlista.date = it
-                createlist.list.value?.date = it
-            }
-        )
-
-        if (messageError.isNotBlank()) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(messageError, color = MaterialTheme.colorScheme.error)
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Text(
-            text = "Objetos",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF2ECC71)
-        )
-
-        Button(
-            modifier = Modifier
-                .padding(vertical = 16.dp)
-                .fillMaxWidth(),
-            onClick = { navController.navigate("create-product") },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2ECC71))
-        ) {
-            Text("AGREGAR", fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
-        }
-
-        LazyColumn {
-            items(lista) { producto ->
-                ProductWidget(producto) {
-                    list.remove(producto)
-                    lista.remove(producto)
-                    objectlista.products = list
+            LazyColumn(modifier = Modifier.background(MaterialTheme.colorScheme.tertiary)) {
+                items(lista) { producto ->
+                    ProductWidget(producto) {
+                        list.remove(producto)
+                        lista.remove(producto)
+                        objectlista.products = list
+                    }
                 }
             }
         }
@@ -221,10 +257,10 @@ fun DateTime(
         OutlinedTextField(
             value = fechaSeleccionada?.toString() ?: "",
             onValueChange = {},
-            label = { Text("Fecha", fontSize = 14.sp) },
+            label = { Text("Fecha", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface) },
             readOnly = true,
             enabled = false,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.tertiary)
         )
     }
 }
@@ -235,7 +271,7 @@ fun ProductWidget(product: Product, onDelete: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFEEFCF5)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),
         shape = MaterialTheme.shapes.medium
     ) {
         Row(
@@ -252,8 +288,8 @@ fun ProductWidget(product: Product, onDelete: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
-                    Text(product.name, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                    Text("Unidades: ${product.amount} ${product.und}", fontSize = 14.sp)
+                    Text(product.name, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
+                    Text("Unidades: ${product.amount} ${product.und}", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
                 }
             }
             Icon(

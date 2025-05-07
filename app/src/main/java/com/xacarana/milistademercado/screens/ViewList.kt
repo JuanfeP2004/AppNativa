@@ -1,6 +1,7 @@
 package com.xacarana.milistademercado.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -33,8 +34,8 @@ fun ViewList(navController: NavController, list: ViewListModel, db: Database, Th
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 32.dp, vertical = 24.dp),
-        color = Color(0xFFEFFEF7)
+            .padding(horizontal = 32.dp, vertical = 24.dp)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(24.dp),
@@ -49,11 +50,11 @@ fun ViewList(navController: NavController, list: ViewListModel, db: Database, Th
             ) {
                 Button(
                     onClick = { navController.navigate("menu") },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00B050)),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     shape = MaterialTheme.shapes.large,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("REGRESAR", color = Color.White, fontSize = 16.sp)
+                    Text("REGRESAR", color = MaterialTheme.colorScheme.onSurface, fontSize = 16.sp)
                 }
                 Button(
                     onClick = {
@@ -64,11 +65,11 @@ fun ViewList(navController: NavController, list: ViewListModel, db: Database, Th
                             {}
                         )
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00B050)),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     shape = MaterialTheme.shapes.large,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("ELIMINAR", color = Color.White, fontSize = 16.sp)
+                    Text("ELIMINAR", color = MaterialTheme.colorScheme.onSurface, fontSize = 16.sp)
                 }
             }
 
@@ -79,7 +80,8 @@ fun ViewList(navController: NavController, list: ViewListModel, db: Database, Th
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             Divider(thickness = 1.dp, color = Color.Black.copy(alpha = 0.5f))
@@ -88,7 +90,8 @@ fun ViewList(navController: NavController, list: ViewListModel, db: Database, Th
                 text = "Descripcion:",
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
-                modifier = Modifier.align(Alignment.Start)
+                modifier = Modifier.align(Alignment.Start),
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             Surface(
@@ -97,11 +100,13 @@ fun ViewList(navController: NavController, list: ViewListModel, db: Database, Th
                     .fillMaxWidth()
                     .height(100.dp)
                     .padding(horizontal = 4.dp)
+                    .background(MaterialTheme.colorScheme.tertiary)
             ) {
                 Text(
                     text = list.list.value!!.description,
                     modifier = Modifier.padding(8.dp),
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
 
@@ -109,15 +114,17 @@ fun ViewList(navController: NavController, list: ViewListModel, db: Database, Th
                 text = "Para: ${list.list.value!!.date}",
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
-                modifier = Modifier.align(Alignment.Start)
+                modifier = Modifier.align(Alignment.Start),
+                color = MaterialTheme.colorScheme.onSurface
             )
 
-            Column(modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.tertiary)) {
                 Text(
                     text = "Objetos",
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
-                    modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
+                    modifier = Modifier.padding(start = 8.dp, bottom = 8.dp),
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     items(list.list.value!!.products) { product ->
@@ -141,7 +148,7 @@ fun ProductListWidget(product: Product, list: MarketList) {
             containerColor = when (check) {
                 "checked" -> Color(0xFFB9EACB)
                 "deleted" -> Color(0xFFFFD6D6)
-                else -> Color.White
+                else -> MaterialTheme.colorScheme.secondary
             }
         )
     ) {
@@ -161,12 +168,14 @@ fun ProductListWidget(product: Product, list: MarketList) {
                     text = product.name,
                     textDecoration = if (check != "none") TextDecoration.LineThrough else null,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = "Unidades: ${product.amount}${product.und}",
                     textDecoration = if (check != "none") TextDecoration.LineThrough else null,
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 if (check != "none") {
                     Text(

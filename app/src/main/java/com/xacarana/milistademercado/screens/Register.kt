@@ -32,7 +32,7 @@ fun Register(navController: NavController, authenticator: Auth, Theme: ThemeView
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(BackgroundLight)
+            .background(MaterialTheme.colorScheme.background)
     ) {
         Column(
             modifier = ScreenPadding
@@ -53,13 +53,13 @@ fun Register(navController: NavController, authenticator: Auth, Theme: ThemeView
             Text(
                 text = "LISTA DIGITAL",
                 style = MaterialTheme.typography.headlineLarge,
-                color = GreenPrimary
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             Text(
                 text = "¡Bienvenido!",
                 style = MaterialTheme.typography.bodyLarge,
-                color = TextColor
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             OutlinedTextField(
@@ -74,21 +74,21 @@ fun Register(navController: NavController, authenticator: Auth, Theme: ThemeView
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Ingresa tu correo:", style = MaterialTheme.typography.labelLarge) },
+                label = { Text("Ingresa tu correo:", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurface) },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.background),
                 shape = RoundedCornerShape(12.dp)
             )
 
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Ingresa tu contraseña:", style = MaterialTheme.typography.labelLarge) },
+                label = { Text("Ingresa tu contraseña:", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurface) },
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.background),
                 shape = RoundedCornerShape(12.dp)
             )
 
@@ -114,10 +114,10 @@ fun Register(navController: NavController, authenticator: Auth, Theme: ThemeView
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = GreenPrimary),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 shape = RoundedCornerShape(50)
             ) {
-                Text("REGISTRARSE", color = Color.White, style = MaterialTheme.typography.labelLarge)
+                Text("REGISTRARSE", color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.labelLarge)
             }
 
             Button(
@@ -125,10 +125,10 @@ fun Register(navController: NavController, authenticator: Auth, Theme: ThemeView
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = GreenSecondary),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 shape = RoundedCornerShape(50)
             ) {
-                Text("YA TENGO UN USUARIO", color = TextColor, style = MaterialTheme.typography.labelLarge)
+                Text("YA TENGO UN USUARIO", color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.labelLarge)
             }
         }
     }
