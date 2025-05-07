@@ -15,10 +15,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.xacarana.milistademercado.functions.Auth
+import com.xacarana.milistademercado.models.ThemeViewModel
 import com.xacarana.milistademercado.models.User
 
 @Composable
-fun SettingsScreen(navController: NavController, user: User, authenticator: Auth) {
+fun SettingsScreen(navController: NavController, user: User, authenticator: Auth, Theme: ThemeViewModel) {
     var darkThemeEnabled by remember { mutableStateOf(false) }
 
     val backgroundColor = if (darkThemeEnabled) Color(0xFF121212) else Color(0xFFF0FFF7)
@@ -30,7 +31,7 @@ fun SettingsScreen(navController: NavController, user: User, authenticator: Auth
             .fillMaxSize()
             .background(backgroundColor)
             .padding(24.dp),
-        color = backgroundColor
+        color = MaterialTheme.colorScheme.background
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -60,7 +61,7 @@ fun SettingsScreen(navController: NavController, user: User, authenticator: Auth
 
             // Botón modo oscuro
             Button(
-                onClick = { darkThemeEnabled = !darkThemeEnabled },
+                onClick = { Theme.toggleTheme() },
                 colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
                 shape = RoundedCornerShape(50),
                 modifier = Modifier

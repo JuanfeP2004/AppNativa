@@ -28,13 +28,21 @@ private val LightColorScheme = lightColorScheme(
     onSurface = TextColor,
 )
 
+val DarkColorScheme = darkColorScheme(
+    primary = GreenPrimaryDark,
+    secondary = GreenSecondaryDark,
+    tertiary = GreenTertiaryDark,
+    background = BackgroundDark,
+    onSurface = TextColorDark
+)
+
 @Composable
 fun MiListaDeMercadoTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean,// = isSystemInDarkTheme(),
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = LightColorScheme
+    val colorScheme = if(darkTheme) DarkColorScheme else LightColorScheme
 
     MaterialTheme(
         colorScheme = colorScheme,

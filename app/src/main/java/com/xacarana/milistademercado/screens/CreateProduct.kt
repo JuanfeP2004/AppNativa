@@ -20,6 +20,7 @@ import com.xacarana.milistademercado.R
 import com.xacarana.milistademercado.models.CreateListModel
 import com.xacarana.milistademercado.models.User
 import com.xacarana.milistademercado.models.Product
+import com.xacarana.milistademercado.models.ThemeViewModel
 
 val GreenPrimary = Color(0xFF2ECC71)
 val GreenSecondary = Color(0xFF7EECA5)
@@ -30,7 +31,8 @@ fun CreateProduct(
     navController: NavController,
     user: User,
     list: MutableList<Product>,
-    createlist: CreateListModel
+    createlist: CreateListModel,
+    Theme: ThemeViewModel
 ) {
     val opciones = listOf("und", "kg", "lbs", "lts", "cm")
     var seleccion by remember { mutableStateOf("und") }
@@ -153,6 +155,16 @@ fun CreateProduct(
             item { ProductImageWidget("Carne", R.drawable.carne, product, name) }
             item { ProductImageWidget("Platano", R.drawable.platano, product, name) }
             item { ProductImageWidget("Pescado", R.drawable.pescado, product, name) }
+            item { ProductImageWidget("Aceite", R.drawable.aceite, product, name) }
+            item { ProductImageWidget("Cebolla", R.drawable.cebolla, product, name) }
+            item { ProductImageWidget("Cereal", R.drawable.cereal, product, name) }
+            item { ProductImageWidget("Frijoles", R.drawable.frijoles, product, name) }
+            item { ProductImageWidget("Jabon", R.drawable.jabon, product, name) }
+            item { ProductImageWidget("Leche", R.drawable.leche, product, name) }
+            item { ProductImageWidget("Manzana", R.drawable.manzana, product, name) }
+            item { ProductImageWidget("Pan", R.drawable.pan, product, name) }
+            item { ProductImageWidget("Pasta", R.drawable.pasta, product, name) }
+            item { ProductImageWidget("Queso", R.drawable.queso, product, name) }
         }
     }
 }

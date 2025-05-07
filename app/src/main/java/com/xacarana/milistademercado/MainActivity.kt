@@ -1,5 +1,6 @@
 package com.xacarana.milistademercado
 
+import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -52,10 +53,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
+        val colorTheme = ThemeViewModel()
         enableEdgeToEdge()
         setContent {
-            MiListaDeMercadoTheme {
-                AppNavigator()
+            MiListaDeMercadoTheme(colorTheme.isDarkTheme.value) {
+                AppNavigator(colorTheme)
             }
         }
     }
@@ -63,30 +65,30 @@ class MainActivity : ComponentActivity() {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AppNavigator() {
+fun AppNavigator(theme: ThemeViewModel) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "register") {
         composable("register") {
-            Register(navController, authenticator)
+            Register(navController, authenticator, theme)
         }
         composable("login") {
-            Login(navController, usuario, authenticator)
+            Login(navController, usuario, authenticator, theme)
         }
         composable("menu") {
-            Menu(navController, usuario, firebase, viewlist)
+            Menu(navController, usuario, firebase, viewlist, theme)
         }
         composable("create-list") {
-            CreateList(navController, usuario, firebase, list, createlist)
+            CreateList(navController, usuario, firebase, list, createlist, theme)
         }
         composable("create-product") {
-            CreateProduct(navController, usuario, list, createlist)
+            CreateProduct(navController, usuario, list, createlist, theme)
         }
         composable("view-list") {
-            ViewList(navController, viewlist, firebase)
+            ViewList(navController, viewlist, firebase, theme)
         }
         composable("settings") {
-            SettingsScreen(navController, usuario, authenticator)
+            SettingsScreen(navController, usuario, authenticator, theme)
         }
     }
 }

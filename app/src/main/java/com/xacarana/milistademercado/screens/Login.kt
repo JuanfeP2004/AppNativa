@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.xacarana.milistademercado.R
 import com.xacarana.milistademercado.functions.Auth
+import com.xacarana.milistademercado.models.ThemeViewModel
 import com.xacarana.milistademercado.models.User
 import com.xacarana.milistademercado.ui.theme.BackgroundLight
 import com.xacarana.milistademercado.ui.theme.GreenPrimary
@@ -30,7 +31,7 @@ import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Login(navController: NavController, user: User, authenticator: Auth) {
+fun Login(navController: NavController, user: User, authenticator: Auth, Theme: ThemeViewModel) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var messageError by remember { mutableStateOf("") }

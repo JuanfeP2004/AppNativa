@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.xacarana.milistademercado.functions.Database
 import com.xacarana.milistademercado.models.MarketList
+import com.xacarana.milistademercado.models.ThemeViewModel
 import com.xacarana.milistademercado.models.User
 import com.xacarana.milistademercado.models.ViewListModel
 import com.xacarana.milistademercado.ui.theme.*
@@ -33,7 +34,7 @@ import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Menu(navController: NavController, user: User, db: Database, viewmodel: ViewListModel) {
+fun Menu(navController: NavController, user: User, db: Database, viewmodel: ViewListModel, Theme: ThemeViewModel) {
     var messageError by remember { mutableStateOf("") }
     var chargeMessage by remember { mutableStateOf("Cargando listas...") }
     var items by remember { mutableStateOf<List<MarketList>>(emptyList()) }

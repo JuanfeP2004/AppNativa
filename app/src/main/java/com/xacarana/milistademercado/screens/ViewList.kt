@@ -26,9 +26,10 @@ import com.xacarana.milistademercado.models.Product
 import com.xacarana.milistademercado.models.ViewListModel
 import com.xacarana.milistademercado.usuario
 import com.xacarana.milistademercado.firebase
+import com.xacarana.milistademercado.models.ThemeViewModel
 
 @Composable
-fun ViewList(navController: NavController, list: ViewListModel, db: Database) {
+fun ViewList(navController: NavController, list: ViewListModel, db: Database, Theme: ThemeViewModel) {
     Surface(
         modifier = Modifier
             .fillMaxSize()

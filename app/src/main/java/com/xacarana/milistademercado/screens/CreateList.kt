@@ -28,6 +28,7 @@ import com.xacarana.milistademercado.functions.Database
 import com.xacarana.milistademercado.models.CreateListModel
 import com.xacarana.milistademercado.models.MarketList
 import com.xacarana.milistademercado.models.Product
+import com.xacarana.milistademercado.models.ThemeViewModel
 import com.xacarana.milistademercado.models.User
 import java.time.LocalDate
 
@@ -39,7 +40,8 @@ fun CreateList(
     user: User,
     db: Database,
     list: MutableList<Product>,
-    createlist: CreateListModel
+    createlist: CreateListModel,
+    Theme: ThemeViewModel
 ) {
     var fecha by remember { mutableStateOf(createlist.list.value?.date!!) }
     var name by remember { mutableStateOf(createlist.list.value?.name!!) }
