@@ -62,8 +62,8 @@ fun CreateList(
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 32.dp, vertical = 24.dp)
             .background(MaterialTheme.colorScheme.background)
+            .padding(horizontal = 32.dp, vertical = 24.dp)
     ) {
         Column(
             modifier = Modifier
@@ -153,6 +153,10 @@ fun CreateList(
                     objectlista.name = it
                     createlist.list.value?.name = it
                 },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,      // Texto cuando está enfocado
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface    // Texto cuando no está enfocado
+                ),
                 modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.tertiary),
                 singleLine = true
             )
@@ -256,6 +260,10 @@ fun DateTime(
     ) {
         OutlinedTextField(
             value = fechaSeleccionada?.toString() ?: "",
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,      // Texto cuando está enfocado
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface    // Texto cuando no está enfocado
+            ),
             onValueChange = {},
             label = { Text("Fecha", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface) },
             readOnly = true,

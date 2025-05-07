@@ -34,8 +34,9 @@ fun ViewList(navController: NavController, list: ViewListModel, db: Database, Th
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 32.dp, vertical = 24.dp)
             .background(MaterialTheme.colorScheme.background)
+            .padding(horizontal = 32.dp, vertical = 24.dp)
+
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(24.dp),
@@ -94,21 +95,13 @@ fun ViewList(navController: NavController, list: ViewListModel, db: Database, Th
                 color = MaterialTheme.colorScheme.onSurface
             )
 
-            Surface(
-                color = Color(0xFFDCE6D7),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp)
-                    .padding(horizontal = 4.dp)
-                    .background(MaterialTheme.colorScheme.tertiary)
-            ) {
-                Text(
-                    text = list.list.value!!.description,
-                    modifier = Modifier.padding(8.dp),
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
+            OutlinedTextField(
+                value = list.list.value!!.description,
+                onValueChange = {},
+                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.tertiary),
+                maxLines = 3,
+                readOnly = true
+            )
 
             Text(
                 text = "Para: ${list.list.value!!.date}",

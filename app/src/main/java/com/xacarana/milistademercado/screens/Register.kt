@@ -65,9 +65,9 @@ fun Register(navController: NavController, authenticator: Auth, Theme: ThemeView
             OutlinedTextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("Ingresa tu nombre:", style = MaterialTheme.typography.labelLarge) },
+                label = { Text("Ingresa tu nombre:", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurface) },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.background),
                 shape = RoundedCornerShape(12.dp)
             )
 

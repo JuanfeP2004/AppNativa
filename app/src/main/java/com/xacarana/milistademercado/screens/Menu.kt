@@ -51,12 +51,11 @@ fun Menu(navController: NavController, user: User, db: Database, viewmodel: View
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(horizontal = 24.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 24.dp),
+                .padding(top = 24.dp).padding(24.dp).background(MaterialTheme.colorScheme.background),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             // Icono ajustes

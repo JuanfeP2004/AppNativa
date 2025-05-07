@@ -37,7 +37,6 @@ fun CreateProduct(
     val opciones = listOf("und", "kg", "lbs", "lts", "cm")
     var seleccion by remember { mutableStateOf("und") }
     var errorMessage by remember { mutableStateOf("") }
-    //var productSelect by remember { mutable}
 
     var product by remember {
         mutableStateOf(
@@ -58,8 +57,8 @@ fun CreateProduct(
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 32.dp, vertical = 24.dp)
             .background(MaterialTheme.colorScheme.background)
+            .padding(horizontal = 32.dp, vertical = 24.dp)
     ){
     Column(
         modifier = Modifier
@@ -132,6 +131,10 @@ fun CreateProduct(
                         product.amount = newAmount
                     }
                 },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,      // Texto cuando está enfocado
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface    // Texto cuando no está enfocado
+                ),
                 label = { Text("Cantidad", color = MaterialTheme.colorScheme.onSurface) }
             )
 
@@ -203,7 +206,7 @@ fun Selector(
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded)
             },
-            modifier = Modifier.menuAnchor()
+            modifier = Modifier.menuAnchor().background(MaterialTheme.colorScheme.secondary)
         )
 
         ExposedDropdownMenu(
@@ -231,7 +234,6 @@ fun ProductImageWidget(
     product: Product,
     nameState: MutableState<String>
 ) {
-    val isSelected = product.name == name
 
     Column(
         modifier = Modifier
@@ -240,7 +242,7 @@ fun ProductImageWidget(
                 product.name = name
                 nameState.value = name
             }
-            .background(if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent)
+            .background(if (nameState.value == name) MaterialTheme.colorScheme.primary else Color.Transparent)
             .padding(4.dp)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
